@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 落地运营设计 · 遥望科技社区超市战略报告</title>
+<style>
+  :root {
+    --dark: #0D1B5E;
+    --primary: #1A3FD4;
+    --accent: #4B8AF4;
+    --white: #FFFFFF;
+    --bg-light: #F8F9FE;
+    --text: #1A1A2E;
+    --text-sub: #6B7280;
+    --border: #E5E7EB;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif; color: var(--text); background: var(--white); }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; height: 60px;
+    background: var(--dark); display: flex; align-items: center;
+    justify-content: space-between; padding: 0 40px; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-brand { color: var(--white); font-size: 14px; font-weight: 600; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 8px; }
+  .nav-links a {
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;
+    padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(255,255,255,0.1); }
+
+  .hero {
+    min-height: 100vh; background: var(--dark); display: flex; align-items: center;
+    justify-content: center; position: relative; overflow: hidden; padding: 80px 40px 60px;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(75,138,244,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(75,138,244,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-deco {
+    position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
+    font-size: 280px; font-weight: 900; color: rgba(255,255,255,0.03);
+    line-height: 1; user-select: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(75,138,244,0.15); border: 1px solid rgba(75,138,244,0.3);
+    color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
+    padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; text-transform: uppercase;
+  }
+  .hero-title {
+    font-size: clamp(40px, 5.5vw, 68px); font-weight: 900; color: var(--white);
+    line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px;
+  }
+  .hero-title span { color: var(--accent); }
+  .hero-sub { font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 560px; text-align: justify; }
+
+  .section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: var(--primary); text-transform: uppercase; margin-bottom: 12px; }
+  .section-title { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; color: var(--text); line-height: 1.2; margin-bottom: 16px; }
+  .title-bar { width: 48px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent)); border-radius: 2px; margin-bottom: 48px; }
+
+  /* CRITERIA */
+  .criteria-list { display: flex; flex-direction: column; gap: 16px; }
+  .criteria-item {
+    display: flex; align-items: flex-start; gap: 20px;
+    background: var(--bg-light); border: 1px solid var(--border);
+    border-radius: 16px; padding: 24px 28px; transition: all 0.2s;
+  }
+  .criteria-item:hover { border-color: var(--accent); box-shadow: 0 8px 32px rgba(26,63,212,0.08); }
+  .criteria-num {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: white;
+  }
+  .criteria-body { flex: 1; }
+  .criteria-title { font-size: 17px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+  .criteria-desc { font-size: 13px; color: var(--text-sub); line-height: 1.7; text-align: justify; }
+  .criteria-badge {
+    display: inline-block; margin-top: 8px; padding: 3px 12px; border-radius: 100px;
+    font-size: 12px; font-weight: 700; background: var(--dark); color: white;
+  }
+
+  /* SYSTEMS */
+  .systems-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .system-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+  }
+  .system-header {
+    padding: 20px 24px; background: linear-gradient(135deg, var(--dark), var(--primary));
+    display: flex; align-items: center; gap: 12px;
+  }
+  .system-icon { font-size: 20px; }
+  .system-name { font-size: 15px; font-weight: 700; color: white; }
+  .system-body { padding: 24px; }
+  .system-problem {
+    background: #FEF2F2; border-left: 3px solid #EF4444; border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin-bottom: 12px;
+  }
+  .sys-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .sys-p .sys-label { color: #B91C1C; }
+  .sys-s .sys-label { color: #065F46; }
+  .sys-text { font-size: 13px; line-height: 1.6; text-align: justify; }
+  .sys-p .sys-text { color: #7F1D1D; }
+  .sys-s .sys-text { color: #14532D; }
+  .system-solution {
+    background: #F0FDF4; border-left: 3px solid #10B981; border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+  }
+
+  /* TEAM */
+  .team-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .team-chart { background: var(--bg-light); border-radius: 20px; padding: 32px; }
+  .team-node {
+    display: flex; align-items: center; gap: 16px; padding: 14px 20px;
+    border-radius: 12px; margin-bottom: 8px;
+  }
+  .tn-hq { background: linear-gradient(135deg, var(--dark), var(--primary)); color: white; }
+  .tn-store { background: white; border: 1px solid var(--border); }
+  .tn-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .tn-store .tn-icon { background: var(--bg-light); }
+  .tn-name { font-size: 14px; font-weight: 700; }
+  .tn-hq .tn-name { color: white; }
+  .tn-store .tn-name { color: var(--text); }
+  .tn-sub { font-size: 12px; opacity: 0.7; }
+  .tn-count { margin-left: auto; font-size: 20px; font-weight: 900; }
+  .tn-hq .tn-count { color: var(--accent); }
+  .tn-store .tn-count { color: var(--primary); }
+  .incentive-card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+  .incentive-title { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+  .incentive-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .incentive-item:last-child { border-bottom: none; }
+  .ii-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+  .ii-text { font-size: 14px; color: var(--text-sub); line-height: 1.6; text-align: justify; }
+  .ii-text strong { color: var(--text); }
+
+  /* GANTT */
+  .gantt-wrap { overflow-x: auto; }
+  .gantt { min-width: 800px; }
+  .gantt-header {
+    display: grid; grid-template-columns: 200px repeat(6, 1fr);
+    gap: 0; margin-bottom: 8px;
+  }
+  .gantt-month {
+    text-align: center; font-size: 12px; font-weight: 700;
+    color: var(--text-sub); padding: 8px 4px;
+    background: var(--bg-light); border-left: 1px solid var(--border);
+  }
+  .gantt-month:first-child { border-left: none; border-radius: 8px 0 0 8px; }
+  .gantt-month:last-child { border-radius: 0 8px 8px 0; }
+  .gantt-row {
+    display: grid; grid-template-columns: 200px repeat(6, 1fr);
+    gap: 0; margin-bottom: 6px; align-items: center;
+  }
+  .gantt-label { font-size: 13px; color: var(--text); font-weight: 600; padding: 0 12px 0 0; }
+  .gantt-cell { padding: 4px 2px; position: relative; height: 40px; }
+  .gantt-bar {
+    position: absolute; top: 6px; height: 28px; border-radius: 6px;
+    display: flex; align-items: center; padding: 0 10px;
+    font-size: 11px; font-weight: 700; color: white; white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+  .gantt-bar:hover { opacity: 0.85; }
+  .gb-dark { background: linear-gradient(90deg, var(--dark), var(--primary)); }
+  .gb-primary { background: linear-gradient(90deg, var(--primary), var(--accent)); }
+  .gb-accent { background: linear-gradient(90deg, var(--accent), #93C5FD); }
+  .gb-green { background: linear-gradient(90deg, #059669, #34D399); }
+  .gb-orange { background: linear-gradient(90deg, #D97706, #FCD34D); color: #1A1A2E; }
+
+  /* RISK OPS */
+  .risk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .risk-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 24px;
+  }
+  .risk-label { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+  .risk-title { font-size: 15px; font-weight: 700; color: white; margin-bottom: 12px; }
+  .risk-response { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; text-align: justify; }
+
+  .section-dark { background: var(--dark); padding: 100px 40px; }
+  .section-dark-inner { max-width: 1200px; margin: 0 auto; }
+  .section-dark .section-eyebrow { color: var(--accent); }
+  .section-dark .section-title { color: var(--white); }
+  .section-dark .title-bar { background: linear-gradient(90deg, var(--accent), rgba(75,138,244,0.4)); }
+
+  footer {
+    background: var(--dark); border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 32px 40px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand { color: rgba(255,255,255,0.4); font-size: 13px; }
+  .footer-nav { display: flex; gap: 8px; }
+  .footer-nav a {
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;
+    padding: 8px 20px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px;
+    transition: all 0.2s;
+  }
+  .footer-nav a:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+  .section-wrap { background: var(--white); }
+  .section-wrap-alt { background: var(--bg-light); }
+
+  @media (max-width: 1024px) {
+    .systems-grid, .team-wrap { grid-template-columns: 1fr; }
+    .risk-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><img src="yowant_white.png" alt="遥望科技" style="height:24px;vertical-align:middle;"></div>
+  <div class="nav-links">
+    <a href="index.html">总览</a>
+    <a href="01_industry.html">01 行业分析</a>
+    <a href="02_competitive.html">02 竞品分析</a>
+    <a href="03_opportunity.html">03 机会分析</a>
+    <a href="04_business_model.html">04 商业模式</a>
+    <a href="05_operations.html" class="active">05 运营设计</a>
+    <a href="06_feasibility.html">06 可行性</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-deco">05</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">MODULE 05 &nbsp;·&nbsp; OPERATIONS DESIGN</div>
+    <h1 class="hero-title">从<span>第一天</span>起就专业运营</h1>
+    <p class="hero-sub">X27 Park给我们积累了宝贵的经验：好的战略如果缺乏专业的运营系统支撑，就难以落地。本模块定义七条硬标准、七套系统、每店13人专业团队与完整执行时间表，确保运营能力在开业前就已到位。</p>
+  </div>
+</section>
+
+<!-- SECTION 1: 选址七标准 -->
+<div class="section-wrap">
+<div class="section">
+  <div class="section-eyebrow">SECTION 01 · SITE SELECTION STANDARDS</div>
+  <h2 class="section-title">选址七条硬标准</h2>
+  <div class="title-bar"></div>
+  <p style="font-size:15px;color:var(--text-sub);line-height:1.8;max-width:680px;margin-bottom:40px;text-align:justify;">每条标准都有量化门槛，非谈判条件。选址是影响门店成败的最关键前置决策，必须在签约前完成严格评估。</p>
+  <div class="criteria-list">
+    <div class="criteria-item">
+      <div class="criteria-num">01</div>
+      <div class="criteria-body">
+        <div class="criteria-title">常住人口 ≥ 3000户</div>
+        <div class="criteria-desc">以门店为中心，3公里覆盖半径内的常住家庭户数。按平均家庭月采购频次4次测算，3000户可支撑约12,000次/月的基础到店客流，对应日均400次以上，是日均2万营业额的基础保障。</div>
+        <span class="criteria-badge">量化门槛：≥3000户 / 3公里半径</span>
+      </div>
+    </div>
+    <div class="criteria-item">
+      <div class="criteria-num">02</div>
+      <div class="criteria-body">
+        <div class="criteria-title">社区入住率 ≥ 85%</div>
+        <div class="criteria-desc">目标服务的是已经形成稳定生活习惯的成熟社区。入住率低于85%意味着客流不稳定、消费者尚未形成固定采购习惯，会导致开业初期长期低迷的营业额。</div>
+        <span class="criteria-badge">量化门槛：入住率≥85%</span>
+      </div>
+    </div>
+    <div class="criteria-item">
+      <div class="criteria-num">03</div>
+      <div class="criteria-body">
+        <div class="criteria-title">5年以上房龄小区为主</div>
+        <div class="criteria-desc">居民稳定性高、邻里关系形成，有更强的社区归属感和本地消费意愿。新交付小区居民流动性大，私域用户粘性差，不利于社群运营和复购率建立。</div>
+        <span class="criteria-badge">量化门槛：主力服务小区房龄≥5年</span>
+      </div>
+    </div>
+    <div class="criteria-item">
+      <div class="criteria-num">04</div>
+      <div class="criteria-body">
+        <div class="criteria-title">同类竞品密度 &lt; 1家/500米</div>
+        <div class="criteria-desc">以门店为中心500米范围内，同类社区超市（含盒马NB、叮咚买菜前置仓、区域连锁超市）数量不超过1家。直接竞争会严重稀释客流，降低客户忠诚度，影响日均营业额达标速度。</div>
+        <span class="criteria-badge">量化门槛：同类竞品&lt;1家/500米内</span>
+      </div>
+    </div>
+    <div class="criteria-item">
+      <div class="criteria-num">05</div>
+      <div class="criteria-body">
+        <div class="criteria-title">租金 ≤ 月营收的8%</div>
+        <div class="criteria-desc">可持续的成本结构要求。以基准情境135万月营收为基准，租金成本上限约10.8万/月（8%）。超过这个比例，运营成本结构将难以支撑盈利，必须在合同签约前锁定租金上限。</div>
+        <span class="criteria-badge">量化门槛：月租金≤月营收预测×8%</span>
+      </div>
+    </div>
+    <div class="criteria-item">
+      <div class="criteria-num">06</div>
+      <div class="criteria-body">
+        <div class="criteria-title">面积 900-1200㎡</div>
+        <div class="criteria-desc">黄金尺度区间：900㎡是支撑完整品类结构（生鲜+标品+非标+体验区）的最小面积；1200㎡是在不增加显著运营成本前提下的最优规模，过大会导致人效下降和运营复杂度上升。</div>
+        <span class="criteria-badge">量化门槛：900-1200㎡</span>
+      </div>
+    </div>
+    <div class="criteria-item">
+      <div class="criteria-num">07</div>
+      <div class="criteria-body">
+        <div class="criteria-title">有配送暂存区 + 快递代收区</div>
+        <div class="criteria-desc">即时配送业务需要独立的分拣暂存空间（最小30㎡），快递代收区是高频到店的重要引流场景（每日50-200次代收可额外带来顾客自然到店转化）。缺乏这两个功能区的物业，将显著限制服务半径和到店频次。</div>
+        <span class="criteria-badge">量化门槛：配送区≥30㎡ + 快递代收功能区</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 2: 七系统重建 -->
+<div class="section-wrap-alt">
+<div class="section">
+  <div class="section-eyebrow">SECTION 02 · SEVEN SYSTEMS REBUILD</div>
+  <h2 class="section-title">七系统重建：从经验中升华</h2>
+  <div class="title-bar"></div>
+  <p style="font-size:15px;color:var(--text-sub);line-height:1.8;max-width:680px;margin-bottom:40px;text-align:justify;">X27 Park经历了深度的实践探索。这7个系统的重建，每一个都基于真实经验，每一个都有明确的这次解法。</p>
+  <div class="systems-grid">
+    <div class="system-card">
+      <div class="system-header"><div class="system-icon">📍</div><div class="system-name">选址系统</div></div>
+      <div class="system-body">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">缺乏量化评估标准，依赖物业方推荐和主观判断，导致选址条件不达标时已难以退出。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">建立7条硬标准评分卡，选址评估前置至商务谈判，必须全部达标方可签约。聘请第三方商业顾问做独立选址调研。</div>
+        </div>
+      </div>
+    </div>
+    <div class="system-card">
+      <div class="system-header"><div class="system-icon">📦</div><div class="system-name">货盘系统</div></div>
+      <div class="system-body">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">首批进货凭经验拍脑袋，SKU冗余、生鲜损耗超10%、畅销品缺货现象并存，货盘结构失衡。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">首批货盘参考区域竞品数据+社区问卷调研，按三层毛利结构配比SKU。前3个月每周review，快速淘汰滞销SKU，补入畅销品。</div>
+        </div>
+      </div>
+    </div>
+    <div class="system-card">
+      <div class="system-header"><div class="system-icon">🚛</div><div class="system-name">供应链系统</div></div>
+      <div class="system-body">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">没有稳定的直采渠道，依赖批发商，成本高、质量不稳定，生鲜品采购周期长导致损耗放大。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">开业前60天启动供应链建立。标品与大型品牌厂家/经销商签年度协议；生鲜建立产地直采+本地农批双轨，每日配送，减少库存周期。</div>
+        </div>
+      </div>
+    </div>
+    <div class="system-card">
+      <div class="system-header"><div class="system-icon">💲</div><div class="system-name">定价系统</div></div>
+      <div class="system-body">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">定价策略不清晰，时而超低价吸引客流牺牲毛利，时而定价偏高流失顾客，缺乏科学定价框架。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">建立三层定价逻辑：生鲜品与周边竞品持平或微低；标品跟随电商平台比价+5-10%服务溢价；自孵化品牌独立定价，主打"不在网上卖"的稀缺性。</div>
+        </div>
+      </div>
+    </div>
+    <div class="system-card">
+      <div class="system-header"><div class="system-icon">🏪</div><div class="system-name">门店运营系统</div></div>
+      <div class="system-body">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">缺乏标准化门店操作手册，门店依赖个人经验，换人后运营质量大幅波动，无法复制。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">开业前30天完成SOP手册制定，包含陈列标准、生鲜处理规范、日常盘点流程、顾客服务话术。引入门店POS+ERP系统，数据化监控每日运营指标。</div>
+        </div>
+      </div>
+    </div>
+    <div class="system-card">
+      <div class="system-header"><div class="system-icon">👤</div><div class="system-name">用户运营系统</div></div>
+      <div class="system-body">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">会员体系建立滞后，私域社群流于形式，入群后无活跃维护，用户很快沉默，复购率低。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">开业当天同步启动社群运营，设计"进店扫码入群送当日生鲜优惠券"闭环。社群分层：普通用户/高频用户/VIP，差异化运营。每周社群专属特价，维持活跃度。</div>
+        </div>
+      </div>
+    </div>
+    <div class="system-card" style="grid-column:span 2;">
+      <div class="system-header"><div class="system-icon">💰</div><div class="system-name">现金流系统</div></div>
+      <div class="system-body" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div class="system-problem sys-p">
+          <div class="sys-label">上次的问题</div>
+          <div class="sys-text">现金流管理粗放，开业初期费用支出集中但营收爬坡缓慢，出现资金紧张。没有明确的现金流预警机制和应急预案。</div>
+        </div>
+        <div class="system-solution sys-s">
+          <div class="sys-label">这次的解法</div>
+          <div class="sys-text">68万运营储备金专款专用，不轻易动用。设置每月现金流预警线：当月营收覆盖率&lt;80%时触发预警，&lt;60%时启动应急预案。每两周财务复盘，及时调整运营策略。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 3: 团队架构 -->
+<div class="section-wrap">
+<div class="section">
+  <div class="section-eyebrow">SECTION 03 · TEAM STRUCTURE</div>
+  <h2 class="section-title">每店13人专业团队架构</h2>
+  <div class="title-bar"></div>
+  <p style="font-size:15px;color:var(--text-sub);line-height:1.8;max-width:680px;margin-bottom:40px;text-align:justify;">含生鲜4级加工（原料→净菜→半成品→熟成即食）和轻堂食（20-30座）的门店，必须有专属的加工团队和餐饮团队，而不是让收银员兼顾。每店13人的配置，是支撑这一运营模型的最精简配置。</p>
+  <div class="team-wrap">
+    <div class="team-chart">
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:24px;">总部 5人</div>
+      <div class="team-node tn-hq"><div class="tn-icon">🎯</div><div><div class="tn-name">运营合伙人</div><div class="tn-sub">全盘负责，必须首先到位</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-hq"><div class="tn-icon">🛒</div><div><div class="tn-name">采购负责人</div><div class="tn-sub">供应链建立，必须首先到位</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-hq"><div class="tn-icon">📊</div><div><div class="tn-name">数据运营</div><div class="tn-sub">选品分析、私域数据</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-hq"><div class="tn-icon">📱</div><div><div class="tn-name">内容营销</div><div class="tn-sub">联动MCN资源、社群运营</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-hq"><div class="tn-icon">💼</div><div><div class="tn-name">财务行政</div><div class="tn-sub">现金流管理、合规</div></div><div class="tn-count">×1</div></div>
+
+      <div style="font-size:16px;font-weight:700;color:var(--text);margin:28px 0 8px;">每店 13人（×2店 = 26人）</div>
+      <div style="font-size:12px;color:var(--text-sub);margin-bottom:16px;">含生鲜4级加工组+轻堂食组，是支撑本业态的最精简配置</div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--primary);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;">管理组 2人</div>
+      <div class="team-node tn-store"><div class="tn-icon">🏪</div><div><div class="tn-name">店长</div><div class="tn-sub">全面负责、含私域运营督导</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-store"><div class="tn-icon">🔧</div><div><div class="tn-name">副店长/运营</div><div class="tn-sub">堂食+生鲜双线协调、排班</div></div><div class="tn-count">×1</div></div>
+
+      <div style="font-size:12px;font-weight:700;color:#059669;letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">生鲜4级加工组 4人</div>
+      <div class="team-node tn-store" style="border-left:3px solid #059669;"><div class="tn-icon">🥬</div><div><div class="tn-name">生鲜主管</div><div class="tn-sub">采购对接 · 损耗KPI管控</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-store" style="border-left:3px solid #059669;"><div class="tn-icon">🔪</div><div><div class="tn-name">净菜/半成品加工</div><div class="tn-sub">原料→净菜→半成品（Level 2-3）</div></div><div class="tn-count">×2</div></div>
+      <div class="team-node tn-store" style="border-left:3px solid #059669;"><div class="tn-icon">🍱</div><div><div class="tn-name">熟食/即食制作</div><div class="tn-sub">半成品→熟成即食（Level 4）</div></div><div class="tn-count">×1</div></div>
+
+      <div style="font-size:12px;font-weight:700;color:#D97706;letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">轻堂食组 3人</div>
+      <div class="team-node tn-store" style="border-left:3px solid #D97706;"><div class="tn-icon">👨‍🍳</div><div><div class="tn-name">厨师长</div><div class="tn-sub">菜单研发·出品把控（红烧肉/炸带鱼等）</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-store" style="border-left:3px solid #D97706;"><div class="tn-icon">🍳</div><div><div class="tn-name">帮厨</div><div class="tn-sub">备料协作·出品配合</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-store" style="border-left:3px solid #D97706;"><div class="tn-icon">🍽️</div><div><div class="tn-name">传餐/服务</div><div class="tn-sub">堂食服务·外带打包·收银</div></div><div class="tn-count">×1</div></div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">零售/配送组 4人</div>
+      <div class="team-node tn-store" style="border-left:3px solid var(--accent);"><div class="tn-icon">📦</div><div><div class="tn-name">货架陈列</div><div class="tn-sub">上货补货·陈列标准执行</div></div><div class="tn-count">×1</div></div>
+      <div class="team-node tn-store" style="border-left:3px solid var(--accent);"><div class="tn-icon">⚡</div><div><div class="tn-name">配送员</div><div class="tn-sub">即时配送（峰值外兼顾陈列）</div></div><div class="tn-count">×2</div></div>
+      <div class="team-node tn-store" style="border-left:3px solid var(--accent);"><div class="tn-icon">💳</div><div><div class="tn-name">收银/服务</div><div class="tn-sub">超市收银·顾客引导·社群入口</div></div><div class="tn-count">×1</div></div>
+    </div>
+    <div>
+      <div class="incentive-card" style="margin-bottom:24px;">
+        <div class="incentive-title">激励机制设计</div>
+        <div class="incentive-item">
+          <div class="ii-dot"></div>
+          <div class="ii-text"><strong>运营合伙人：</strong>基本薪资+门店超额净利润分成（超过基准情境净利部分的20%），与门店绑定利益。</div>
+        </div>
+        <div class="incentive-item">
+          <div class="ii-dot"></div>
+          <div class="ii-text"><strong>店长：</strong>固定月薪+门店月度营业额超标奖金，每超1万奖300元，生鲜损耗&lt;4%额外奖励。</div>
+        </div>
+        <div class="incentive-item">
+          <div class="ii-dot"></div>
+          <div class="ii-text"><strong>采购负责人：</strong>基薪+毛利率超标奖励，每超过目标毛利率1个百分点，奖励月薪的10%。</div>
+        </div>
+        <div class="incentive-item">
+          <div class="ii-dot"></div>
+          <div class="ii-text"><strong>厨师长：</strong>高于市场水平的固定月薪+菜品好评率绩效奖金。招募质量是堂食成败的关键，薪酬需有竞争力。</div>
+        </div>
+        <div class="incentive-item">
+          <div class="ii-dot"></div>
+          <div class="ii-text"><strong>生鲜主管：</strong>基薪+损耗率达标奖励，损耗率≤4%奖励月薪的15%，≤3%额外奖励。4级加工转化率也纳入考核。</div>
+        </div>
+        <div class="incentive-item">
+          <div class="ii-dot"></div>
+          <div class="ii-text"><strong>MVP期员工期权：</strong>样板期完成验收目标的全体员工，给予公司期权池激励（具体方案报批）。</div>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--dark),var(--primary));border-radius:16px;padding:28px;color:white;">
+        <div style="font-size:13px;opacity:0.6;margin-bottom:8px;">招募优先级</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:12px;">⚠ 运营合伙人 + 采购负责人 + 厨师长必须在启动前到位</div>
+        <div style="font-size:13px;opacity:0.75;line-height:1.7;text-align:justify;">运营合伙人和采购负责人是整个运营系统的根基。厨师长是堂食成败的关键——轻堂食的核心差异化在于"在家不好做的菜"，厨师长的菜单能力和出品稳定性直接决定堂食是否成为引流利器。这三人必须在选址确认后立即启动招募。</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 4: 执行时间表 -->
+<div class="section-wrap-alt">
+<div class="section">
+  <div class="section-eyebrow">SECTION 04 · EXECUTION TIMELINE</div>
+  <h2 class="section-title">第一阶段执行时间表</h2>
+  <div class="title-bar"></div>
+  <div class="gantt-wrap">
+    <div class="gantt">
+      <div class="gantt-header">
+        <div style="padding:8px 0;font-size:12px;font-weight:700;color:var(--text-sub);">工作项</div>
+        <div class="gantt-month">第1月</div>
+        <div class="gantt-month">第2月</div>
+        <div class="gantt-month">第3月</div>
+        <div class="gantt-month">第4月</div>
+        <div class="gantt-month">第5月</div>
+        <div class="gantt-month">第6月</div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:var(--text-sub);letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">前置准备</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">核心团队招募</div>
+        <div class="gantt-cell" style="grid-column:span 1;">
+          <div class="gantt-bar gb-dark" style="left:2px;right:2px;">运营合伙人+采购</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">选址评估确认</div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-dark" style="left:2px;right:2px;">评估</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-primary" style="left:2px;right:2px;">签约</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">证照申办</div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-primary" style="left:40%;right:2px;">申报</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-primary" style="left:2px;right:40%;">办理</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:var(--text-sub);letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">建设期</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">装修施工</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:2px;right:2px;">施工</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:2px;right:60%;">收尾</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">设备采购安装</div>
+        <div class="gantt-cell"></div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:30%;right:2px;">采购</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:2px;right:40%;">安装调试</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">供应链建立</div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-primary" style="left:50%;right:2px;">调研</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-primary" style="left:2px;right:2px;">谈判签约</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-green" style="left:2px;right:60%;">首批备货</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:var(--text-sub);letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">开业期</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">开业营销预热</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-orange" style="left:2px;right:40%;">明星内容预热</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label" style="font-weight:800;color:var(--primary);">两店同步开业</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell" style="display:flex;align-items:center;justify-content:center;">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:900;box-shadow:0 0 0 4px rgba(26,63,212,0.2);">★</div>
+        </div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:var(--text-sub);letter-spacing:0.1em;text-transform:uppercase;margin:16px 0 8px;">运营优化期</div>
+
+      <div class="gantt-row">
+        <div class="gantt-label">货盘优化调整</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-green" style="left:40%;right:2px;">开始</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-green" style="left:2px;right:2px;">持续优化</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-green" style="left:2px;right:2px;">持续优化</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-green" style="left:2px;right:2px;">持续优化</div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label">会员体系建立</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:40%;right:2px;">启动</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:2px;right:2px;">运营</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:2px;right:2px;">迭代</div>
+        </div>
+        <div class="gantt-cell">
+          <div class="gantt-bar gb-accent" style="left:2px;right:2px;">迭代</div>
+        </div>
+      </div>
+      <div class="gantt-row">
+        <div class="gantt-label" style="font-weight:800;color:var(--primary);">MVP验收评估</div>
+        <div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div><div class="gantt-cell"></div>
+        <div class="gantt-cell" style="display:flex;align-items:center;justify-content:center;">
+          <div style="background:linear-gradient(135deg,var(--dark),var(--primary));color:white;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:700;box-shadow:0 4px 12px rgba(26,63,212,0.3);">验收</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:4px solid var(--primary);">
+      <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:8px;">月1-2 · 里程碑</div>
+      <div style="font-size:13px;color:var(--text-sub);line-height:1.6;text-align:justify;">运营合伙人+采购负责人到位；两处选址签约；供应链主体谈判完成</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:4px solid var(--accent);">
+      <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;">月3 · 关键节点</div>
+      <div style="font-size:13px;color:var(--text-sub);line-height:1.6;text-align:justify;">两店同步开业；开业当日私域社群启动；即时配送平台同步上线</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;border-left:4px solid #10B981;">
+      <div style="font-size:12px;font-weight:700;color:#059669;margin-bottom:8px;">月6 · MVP验收</div>
+      <div style="font-size:13px;color:var(--text-sub);line-height:1.6;text-align:justify;">连续2月日均≥4万；月度净利润为正；复购率≥40%</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 5: 风险应对 -->
+<div class="section-dark">
+<div class="section-dark-inner">
+  <div class="section-eyebrow">SECTION 05 · RISK MANAGEMENT</div>
+  <h2 class="section-title" style="font-size:clamp(28px,3.5vw,42px);font-weight:800;color:white;line-height:1.2;margin-bottom:16px;">核心风险的运营层面应对</h2>
+  <div class="title-bar"></div>
+  <div class="risk-grid">
+    <div class="risk-card">
+      <div class="risk-label">风险 01</div>
+      <div class="risk-title">富力合作推进缓慢</div>
+      <div class="risk-response">双轨并行策略：富力物业谈判与独立首店选址同步推进，不单押富力。若富力延迟超过60天，独立首店已可接替成为样板店A。</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">风险 02</div>
+      <div class="risk-title">首店客流不达预期</div>
+      <div class="risk-response">开业前2周密集预热：联动5名以上达人到店内容，私域社群提前建立（目标300人），开业当日到家平台同步上线，降低对自然客流的依赖。</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">风险 03</div>
+      <div class="risk-title">生鲜损耗超标</div>
+      <div class="risk-response">严格执行每日盘点制度，损耗数据当天可见；每日剩余生鲜做临期折扣处理，宁降价不浪费；前3个月按悲观量备货，宁缺勿滥，建立损耗管控基准后逐步提量。</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">风险 04</div>
+      <div class="risk-title">核心人才招募困难</div>
+      <div class="risk-response">运营合伙人招募设为最高优先级，董事长级别直接参与谈判；备选方案为聘请有成熟连锁超市管理经验的高管做顾问，前期驻场支持。</div>
+    </div>
+    <div class="risk-card">
+      <div class="risk-label">风险 05</div>
+      <div class="risk-title">资金消耗超预算</div>
+      <div class="risk-response">68万运营储备金专款专用；设立月度现金流预警线（营收覆盖率&lt;80%触发预警）；关键支出节点提前4周审批，避免临时大额支出。</div>
+    </div>
+    <div class="risk-card" style="background:rgba(75,138,244,0.1);border-color:rgba(75,138,244,0.3);">
+      <div class="risk-label" style="color:#93C5FD;">运营原则</div>
+      <div class="risk-title">慢就是快</div>
+      <div class="risk-response">样板期宁可放慢，不要为了"按时开业"牺牲质量。若选址不达标、团队不到位、供应链未稳定，延后1个月开业比带病开业要好得多。</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <div class="footer-brand">遥望科技 · 社区超市战略报告 · 2026年4月 · 内部文件</div>
+  <div class="footer-nav">
+    <a href="04_business_model.html">← 04 商业模式</a>
+    <a href="06_feasibility.html">06 可行性 →</a>
+  </div>
+</footer>
+
+</body>
+</html>

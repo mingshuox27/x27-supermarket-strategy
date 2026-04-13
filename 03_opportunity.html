@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 遥望机会分析 · 遥望科技社区超市战略报告</title>
+<style>
+  :root {
+    --dark: #0D1B5E;
+    --primary: #1A3FD4;
+    --accent: #4B8AF4;
+    --white: #FFFFFF;
+    --bg-light: #F8F9FE;
+    --text: #1A1A2E;
+    --text-sub: #6B7280;
+    --border: #E5E7EB;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif; color: var(--text); background: var(--white); }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; height: 60px;
+    background: var(--dark); display: flex; align-items: center;
+    justify-content: space-between; padding: 0 40px; z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-brand { color: var(--white); font-size: 14px; font-weight: 600; letter-spacing: 0.05em; }
+  .nav-links { display: flex; gap: 8px; align-items: center; }
+  .nav-links a {
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;
+    padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--white); background: rgba(255,255,255,0.1); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; background: var(--dark); display: flex; align-items: center;
+    justify-content: center; position: relative; overflow: hidden; padding: 80px 40px 60px;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(75,138,244,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(75,138,244,0.08) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-deco {
+    position: absolute; right: -40px; top: 50%; transform: translateY(-50%);
+    font-size: 280px; font-weight: 900; color: rgba(255,255,255,0.03);
+    line-height: 1; user-select: none; letter-spacing: -10px;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(75,138,244,0.15); border: 1px solid rgba(75,138,244,0.3);
+    color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
+    padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; text-transform: uppercase;
+  }
+  .hero-title {
+    font-size: clamp(44px, 6vw, 72px); font-weight: 900; color: var(--white);
+    line-height: 1.1; margin-bottom: 24px; letter-spacing: -1px;
+  }
+  .hero-title span { color: var(--accent); }
+  .hero-sub { font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.7; max-width: 560px; text-align: justify; }
+
+  /* SECTIONS */
+  .section { padding: 100px 40px; max-width: 1200px; margin: 0 auto; }
+  .section-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: var(--primary);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; color: var(--text);
+    line-height: 1.2; margin-bottom: 16px;
+  }
+  .title-bar {
+    width: 48px; height: 4px; background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 2px; margin-bottom: 48px;
+  }
+
+  /* ASSET CARDS */
+  .asset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .asset-card {
+    background: var(--bg-light); border: 1px solid var(--border);
+    border-radius: 16px; padding: 36px; position: relative; overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .asset-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(26,63,212,0.12); }
+  .asset-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+  }
+  .asset-num {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.15em; color: var(--accent);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .asset-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 20px;
+  }
+  .asset-name { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 12px; }
+  .asset-desc { font-size: 14px; color: var(--text-sub); line-height: 1.8; text-align: justify; }
+  .asset-tag {
+    display: inline-block; margin-top: 16px; padding: 4px 12px; border-radius: 100px;
+    font-size: 12px; font-weight: 600;
+  }
+  .tag-live { background: #D1FAE5; color: #065F46; }
+  .tag-building { background: #FEF3C7; color: #92400E; }
+
+  /* FLYWHEEL - Circular Ring Design */
+  .flywheel-wrap {
+    background: var(--bg-light); border-radius: 24px; padding: 60px 40px;
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    overflow-x: auto;
+  }
+  .fw-circle {
+    width: 700px; height: 700px; position: relative; margin: 0 auto; flex-shrink: 0;
+  }
+  .fw-ring {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    border-radius: 50%; pointer-events: none;
+  }
+  .fw-ring-main {
+    width: 480px; height: 480px;
+    border: 2px solid rgba(75,138,244,0.4);
+    box-shadow: 0 0 70px rgba(75,138,244,0.14), inset 0 0 60px rgba(75,138,244,0.05);
+  }
+  .fw-ring-inner {
+    width: 310px; height: 310px;
+    border: 1.5px dashed rgba(75,138,244,0.22);
+  }
+  .fw-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 160px; height: 160px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--dark), var(--primary));
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; color: var(--white);
+    box-shadow: 0 0 55px rgba(26,63,212,0.45), 0 8px 32px rgba(26,63,212,0.3);
+    z-index: 10;
+  }
+  .fw-node {
+    position: absolute; transform: translate(-50%,-50%);
+    z-index: 5;
+  }
+  .fw-card {
+    background: white; border-radius: 14px; padding: 14px 12px;
+    text-align: center; width: 138px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    border: 1.5px solid var(--border);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .fw-card:hover {
+    box-shadow: 0 8px 32px rgba(26,63,212,0.18);
+    transform: translateY(-3px);
+  }
+  .fw-icon { font-size: 22px; margin-bottom: 6px; }
+  .fw-step { font-size: 10px; font-weight: 700; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 4px; }
+  .fw-label { font-size: 14px; font-weight: 800; color: var(--text); line-height: 1.3; margin-bottom: 4px; }
+  .fw-sub { font-size: 11px; color: var(--text-sub); line-height: 1.4; }
+  .fw-chevron {
+    position: absolute;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white; font-size: 13px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 10px rgba(26,63,212,0.38);
+    z-index: 6; line-height: 1;
+  }
+
+  /* WINDOW */
+  .window-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 48px; }
+  .window-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 16px;
+    padding: 28px; text-align: center; position: relative;
+  }
+  .window-card.highlight {
+    background: linear-gradient(135deg, var(--dark), var(--primary));
+    border: none; color: var(--white);
+  }
+  .window-num { font-size: 48px; font-weight: 900; color: var(--primary); margin-bottom: 8px; line-height: 1; }
+  .window-card.highlight .window-num { color: var(--accent); }
+  .window-unit { font-size: 14px; color: var(--text-sub); margin-bottom: 12px; }
+  .window-card.highlight .window-unit { color: rgba(255,255,255,0.6); }
+  .window-desc { font-size: 13px; color: var(--text-sub); line-height: 1.6; text-align: justify; }
+  .window-card.highlight .window-desc { color: rgba(255,255,255,0.8); }
+
+  /* FOUR ROLES */
+  .roles-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .role-card {
+    border-radius: 20px; padding: 36px; border: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .role-card.r1 { background: linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 100%); }
+  .role-card.r2 { background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%); }
+  .role-card.r3 { background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); }
+  .role-card.r4 { background: linear-gradient(135deg, #FDF4FF 0%, #FAE8FF 100%); }
+  .role-num {
+    font-size: 11px; font-weight: 800; letter-spacing: 0.2em;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .r1 .role-num { color: var(--primary); }
+  .r2 .role-num { color: #16A34A; }
+  .r3 .role-num { color: #EA580C; }
+  .r4 .role-num { color: #9333EA; }
+  .role-icon { font-size: 36px; margin-bottom: 16px; }
+  .role-title { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 12px; }
+  .role-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .rtag {
+    font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 100px;
+    background: rgba(255,255,255,0.7); color: var(--text);
+  }
+
+  /* CTA DARK */
+  .section-dark {
+    background: var(--dark); padding: 100px 40px;
+  }
+  .section-dark-inner { max-width: 1200px; margin: 0 auto; }
+  .section-dark .section-eyebrow { color: var(--accent); }
+  .section-dark .section-title { color: var(--white); }
+  .section-dark .title-bar { background: linear-gradient(90deg, var(--accent), rgba(75,138,244,0.4)); }
+  .conclusion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .conc-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 28px;
+  }
+  .conc-label { font-size: 12px; color: var(--accent); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+  .conc-text { font-size: 15px; color: rgba(255,255,255,0.85); line-height: 1.7; text-align: justify; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 32px 40px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-brand { color: rgba(255,255,255,0.4); font-size: 13px; }
+  .footer-nav { display: flex; gap: 8px; }
+  .footer-nav a {
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 13px;
+    padding: 8px 20px; border: 1px solid rgba(255,255,255,0.15); border-radius: 8px;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .footer-nav a:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+  /* SECTION WRAP */
+  .section-wrap { background: var(--white); }
+  .section-wrap-alt { background: var(--bg-light); }
+
+  @media (max-width: 1024px) {
+    .asset-grid, .roles-grid { grid-template-columns: 1fr; }
+    .fw-circle { transform-origin: top center; transform: scale(0.72); margin-bottom: -140px; }
+    .conclusion-grid, .window-grid { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand"><img src="yowant_white.png" alt="遥望科技" style="height:24px;vertical-align:middle;"></div>
+  <div class="nav-links">
+    <a href="index.html">总览</a>
+    <a href="01_industry.html">01 行业分析</a>
+    <a href="02_competitive.html">02 竞品分析</a>
+    <a href="03_opportunity.html" class="active">03 机会分析</a>
+    <a href="04_business_model.html">04 商业模式</a>
+    <a href="05_operations.html">05 运营设计</a>
+    <a href="06_feasibility.html">06 可行性</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-deco">03</div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">MODULE 03 &nbsp;·&nbsp; OPPORTUNITY ANALYSIS</div>
+    <h1 class="hero-title">为什么是<span>遥望</span></h1>
+    <p class="hero-sub">在社区零售赛道上，遥望拥有一套别人难以复制的资产组合——内容能力、品牌孵化、私域运营与AI底座。这四件事加在一起，构成了进入这个赛道的战略护城河。</p>
+  </div>
+</section>
+
+<!-- SECTION 1: 四大不可复制资产 -->
+<div class="section-wrap">
+<div class="section">
+  <div class="section-eyebrow">SECTION 01 · CORE ASSETS</div>
+  <h2 class="section-title">遥望的四大不可复制资产</h2>
+  <div class="title-bar"></div>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <div class="asset-num">ASSET 01</div>
+      <div class="asset-icon">🎬</div>
+      <div class="asset-name">MCN内容能力</div>
+      <div class="asset-desc">600+签约明星与达人资源，具备将一个品牌或门店从0到全网爆款的完整内容运营链路。社区超市选品即内容，每一次新品上架都是一次内容事件，传统商超无法复制这一能力。</div>
+      <span class="asset-tag tag-live">✓ 现成能力</span>
+    </div>
+    <div class="asset-card">
+      <div class="asset-num">ASSET 02</div>
+      <div class="asset-icon">🏷️</div>
+      <div class="asset-name">品牌孵化能力</div>
+      <div class="asset-desc">已有朵薇、MBB等孵化成功案例，掌握从白牌OEM到成熟品牌的完整路径——工厂资源、包装设计、内容传播、渠道铺货。社区超市将成为自孵化品牌的线下体验首发阵地，构成内部消化毛利的核心机制。</div>
+      <span class="asset-tag tag-live">✓ 现成能力</span>
+    </div>
+    <div class="asset-card">
+      <div class="asset-num">ASSET 03</div>
+      <div class="asset-icon">🤖</div>
+      <div class="asset-name">AI技术底座</div>
+      <div class="asset-desc">AI选品与补货辅助系统目前正在建设中，预期能力包括：基于区域消费行为数据的智能选品推荐、动态补货预测以降低生鲜损耗、私域用户画像驱动的精准促销策略。这是中期差异化能力，样板期以人工运营为主，AI赋能逐步叠加。</div>
+      <span class="asset-tag tag-building">⚙ 建设中</span>
+    </div>
+    <div class="asset-card">
+      <div class="asset-num">ASSET 04</div>
+      <div class="asset-icon">👥</div>
+      <div class="asset-name">私域用户运营</div>
+      <div class="asset-desc">已有经过验证的私域运营方法论——微信群分层管理、社群激活、直播转化。社区超市是获取最高质量私域用户的天然场景：每一个进店顾客都是已经用脚投票的真实消费者，入群留存率远高于线上获客。</div>
+      <span class="asset-tag tag-live">✓ 现成能力</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 2: 战略飞轮 -->
+<div class="section-wrap-alt">
+<div class="section">
+  <div class="section-eyebrow">SECTION 02 · STRATEGIC FLYWHEEL</div>
+  <h2 class="section-title">战略飞轮：自我加速的商业生态</h2>
+  <div class="title-bar"></div>
+  <div class="flywheel-wrap">
+    <div class="fw-circle">
+      <!-- Decorative rings -->
+      <div class="fw-ring fw-ring-main"></div>
+      <div class="fw-ring fw-ring-inner"></div>
+
+      <!-- Center hub -->
+      <div class="fw-center">
+        <div style="line-height:1.5;">
+          <div style="font-size:24px;margin-bottom:2px;">↻</div>
+          <div style="font-size:13px;font-weight:800;">遥望战略飞轮</div>
+          <div style="font-size:11px;opacity:0.65;margin-top:3px;font-weight:400;">持续自我加速</div>
+        </div>
+      </div>
+
+      <!-- Step 1: 0° top (350,110) -->
+      <div class="fw-node" style="top:110px;left:350px;">
+        <div class="fw-card">
+          <div class="fw-icon">🏭</div>
+          <div class="fw-step">STEP 01</div>
+          <div class="fw-label">品牌孵化</div>
+          <div class="fw-sub">自研品牌低成本高毛利</div>
+        </div>
+      </div>
+
+      <!-- Step 2: 60° upper-right (558,230) -->
+      <div class="fw-node" style="top:230px;left:558px;">
+        <div class="fw-card">
+          <div class="fw-icon">⭐</div>
+          <div class="fw-step">STEP 02</div>
+          <div class="fw-label">内容引爆</div>
+          <div class="fw-sub">600+达人造势全网引流</div>
+        </div>
+      </div>
+
+      <!-- Step 3: 120° lower-right (558,470) -->
+      <div class="fw-node" style="top:470px;left:558px;">
+        <div class="fw-card">
+          <div class="fw-icon">🏪</div>
+          <div class="fw-step">STEP 03</div>
+          <div class="fw-label">门店体验</div>
+          <div class="fw-sub">线下体验闭合内容种草</div>
+        </div>
+      </div>
+
+      <!-- Step 4: 180° bottom (350,590) -->
+      <div class="fw-node" style="top:590px;left:350px;">
+        <div class="fw-card">
+          <div class="fw-icon">⚡</div>
+          <div class="fw-step">STEP 04</div>
+          <div class="fw-label">即时履约</div>
+          <div class="fw-sub">直播下单10分钟到家</div>
+        </div>
+      </div>
+
+      <!-- Step 5: 240° lower-left (142,470) -->
+      <div class="fw-node" style="top:470px;left:142px;">
+        <div class="fw-card">
+          <div class="fw-icon">📊</div>
+          <div class="fw-step">STEP 05</div>
+          <div class="fw-label">数据反哺</div>
+          <div class="fw-sub">消费数据优化选品决策</div>
+        </div>
+      </div>
+
+      <!-- Step 6: 300° upper-left (142,230) -->
+      <div class="fw-node" style="top:230px;left:142px;">
+        <div class="fw-card">
+          <div class="fw-icon">👥</div>
+          <div class="fw-step">STEP 06</div>
+          <div class="fw-label">私域积累</div>
+          <div class="fw-sub">高质量用户沉淀入群</div>
+        </div>
+      </div>
+
+      <!-- Clockwise directional arrows at R=200, midpoint angles -->
+      <!-- 30°: (450,177) -->
+      <div class="fw-chevron" style="top:177px;left:450px;transform:translate(-50%,-50%) rotate(30deg);">→</div>
+      <!-- 90°: (550,350) -->
+      <div class="fw-chevron" style="top:350px;left:550px;transform:translate(-50%,-50%) rotate(90deg);">→</div>
+      <!-- 150°: (450,523) -->
+      <div class="fw-chevron" style="top:523px;left:450px;transform:translate(-50%,-50%) rotate(150deg);">→</div>
+      <!-- 210°: (250,523) -->
+      <div class="fw-chevron" style="top:523px;left:250px;transform:translate(-50%,-50%) rotate(210deg);">→</div>
+      <!-- 270°: (150,350) -->
+      <div class="fw-chevron" style="top:350px;left:150px;transform:translate(-50%,-50%) rotate(270deg);">→</div>
+      <!-- 330°: (250,177) -->
+      <div class="fw-chevron" style="top:177px;left:250px;transform:translate(-50%,-50%) rotate(330deg);">→</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 3: 时间窗口 -->
+<div class="section-wrap">
+<div class="section">
+  <div class="section-eyebrow">SECTION 03 · TIMING WINDOW</div>
+  <h2 class="section-title">时间窗口：3-5年的战略机会期</h2>
+  <div class="title-bar"></div>
+  <p style="font-size:16px;color:var(--text-sub);line-height:1.8;max-width:700px;margin-bottom:48px;">社区零售的格局重塑正在发生，但尚未完成。现在进入，既能赶上市场教育完成后的红利期，又能在巨头完成布局前建立起本地壁垒。</p>
+  <div class="window-grid">
+    <div class="window-card">
+      <div class="window-num">3-5</div>
+      <div class="window-unit">年战略窗口期</div>
+      <div class="window-desc">即时零售基础设施（美团/京东到家）已基本完成市场教育，消费者行为已改变，但社区实体零售的数字化改造仍处早期。</div>
+    </div>
+    <div class="window-card highlight">
+      <div class="window-num">现在</div>
+      <div class="window-unit">是最佳切入时间点</div>
+      <div class="window-desc">疫情后消费者对社区服务的需求被激活，但供给侧尚未被资本充分覆盖。2026年是窗口期的黄金中段。</div>
+    </div>
+    <div class="window-card">
+      <div class="window-num">2028+</div>
+      <div class="window-unit">竞争格局将固化</div>
+      <div class="window-desc">预计2-3年内主流社区零售格局将初步固化，先建立区域品牌认知的玩家将拥有明显的防守优势和加盟吸引力。</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 4: 四角色模型 -->
+<div class="section-wrap-alt">
+<div class="section">
+  <div class="section-eyebrow">SECTION 04 · FOUR ROLE MODEL</div>
+  <h2 class="section-title">一家门店，四个战略角色</h2>
+  <div class="title-bar"></div>
+  <div class="roles-grid">
+    <div class="role-card r1">
+      <div class="role-num">ROLE 01</div>
+      <div class="role-icon">🛒</div>
+      <div class="role-title">零售店</div>
+      <p style="font-size:14px;color:var(--text-sub);line-height:1.7;">核心的线下零售门店，以生鲜作为高频引流品，以标准化商品锁定固定复购，以高毛利非标商品（含自孵化品牌）贡献利润。</p>
+      <div class="role-tags">
+        <span class="rtag">生鲜引流</span>
+        <span class="rtag">标品锁客</span>
+        <span class="rtag">非标盈利</span>
+      </div>
+    </div>
+    <div class="role-card r2">
+      <div class="role-num">ROLE 02</div>
+      <div class="role-icon">⚡</div>
+      <div class="role-title">即时履约节点</div>
+      <p style="font-size:14px;color:var(--text-sub);line-height:1.7;">作为美团/京东到家/抖音即时零售的前置仓节点，同时也是遥望自营直播间的专属履约仓。消费者在直播间下单，10分钟内配达。</p>
+      <div class="role-tags">
+        <span class="rtag">直播间下单</span>
+        <span class="rtag">10分钟到家</span>
+        <span class="rtag">前置仓节点</span>
+      </div>
+    </div>
+    <div class="role-card r3">
+      <div class="role-num">ROLE 03</div>
+      <div class="role-icon">✨</div>
+      <div class="role-title">品牌体验中心</div>
+      <p style="font-size:14px;color:var(--text-sub);line-height:1.7;">自孵化品牌（朵薇、MBB等）的线下体验首发阵地，同时为合作品牌提供付费体验专区。完成"线上种草→线下体验→即时送达"的完整闭环。</p>
+      <div class="role-tags">
+        <span class="rtag">品牌体验区</span>
+        <span class="rtag">线下种草</span>
+        <span class="rtag">闭环转化</span>
+      </div>
+    </div>
+    <div class="role-card r4">
+      <div class="role-num">ROLE 04</div>
+      <div class="role-icon">🔗</div>
+      <div class="role-title">私域用户入口</div>
+      <p style="font-size:14px;color:var(--text-sub);line-height:1.7;">实体门店是最高质量的私域获客场景——每个进店的顾客都已经发生了真实的消费行为。通过入群福利引导，将线下客流转化为高价值私域用户，复购成本大幅低于线上获客。</p>
+      <div class="role-tags">
+        <span class="rtag">高质量获客</span>
+        <span class="rtag">私域社群</span>
+        <span class="rtag">低成本复购</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 5: 核心结论 -->
+<div class="section-dark">
+<div class="section-dark-inner">
+  <div class="section-eyebrow">SECTION 05 · CORE CONCLUSION</div>
+  <h2 class="section-title" style="font-size:clamp(28px,3.5vw,42px);font-weight:800;line-height:1.2;margin-bottom:16px;">为什么现在，为什么遥望</h2>
+  <div class="title-bar"></div>
+  <p style="font-size:17px;color:rgba(255,255,255,0.7);line-height:1.8;max-width:700px;margin-bottom:48px;">三个条件同时成立，才构成真正的战略机会。遥望当下正处于这三个条件同时满足的罕见时间窗口。</p>
+  <div class="conclusion-grid">
+    <div class="conc-card">
+      <div class="conc-label">市场条件</div>
+      <div class="conc-text">社区零售数字化改造进入加速期，消费者习惯已被培养，但优质供给侧尚未饱和。先入者将建立品牌认知和供应链壁垒。</div>
+    </div>
+    <div class="conc-card">
+      <div class="conc-label">能力条件</div>
+      <div class="conc-text">遥望已具备三项现成能力（MCN内容、品牌孵化、私域运营）和一项建设中能力（AI底座），形成其他零售玩家难以在短期内复制的差异化组合。</div>
+    </div>
+    <div class="conc-card">
+      <div class="conc-label">战略条件</div>
+      <div class="conc-text">春雷行动已启动，内部资源配置到位。X27生态（Park+Mini+Lab）形成线上线下协同的完整战略框架，社区超市是这个生态的物理落点。</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <div class="footer-brand">遥望科技 · 社区超市战略报告 · 2026年4月 · 内部文件</div>
+  <div class="footer-nav">
+    <a href="02_competitive.html">← 02 竞品分析</a>
+    <a href="04_business_model.html">04 商业模式 →</a>
+  </div>
+</footer>
+
+</body>
+</html>

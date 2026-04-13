@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块01 · 行业深度分析 | 遥望社区超市战略报告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #1A3FD4;
+  --dark: #0D1B5E;
+  --accent: #4B8AF4;
+  --accent-light: #EBF0FF;
+  --green: #10B981;
+  --red: #EF4444;
+  --orange: #F59E0B;
+  --text: #1A1A2E;
+  --muted: #6B7280;
+  --border: #E5E7EB;
+  --bg: #F8F9FE;
+  --white: #FFFFFF;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  color: var(--text);
+  background: var(--white);
+  overflow-x: hidden;
+}
+
+/* NAV */
+.topnav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(13,27,94,0.96); backdrop-filter: blur(16px);
+  padding: 0 48px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(75,138,244,0.2);
+}
+.topnav-left { display: flex; align-items: center; gap: 16px; }
+.nav-brand { color: var(--accent); font-size: 15px; font-weight: 700; letter-spacing: 0.02em; }
+.nav-sep { color: rgba(255,255,255,0.2); font-size: 18px; }
+.nav-module { color: rgba(255,255,255,0.7); font-size: 13px; }
+.nav-back {
+  color: rgba(255,255,255,0.6); font-size: 12px; text-decoration: none;
+  padding: 6px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 20px;
+  transition: all 0.2s;
+}
+.nav-back:hover { color: white; border-color: rgba(255,255,255,0.4); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 12px; padding: 5px 12px; border-radius: 6px; transition: all 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: white; background: rgba(255,255,255,0.12); }
+
+/* HERO */
+.hero {
+  min-height: 100vh; background: var(--dark);
+  display: flex; align-items: center;
+  padding: 100px 80px 80px;
+  position: relative; overflow: hidden;
+}
+.hero-bg-num {
+  position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+  font-size: 480px; font-weight: 900; line-height: 1;
+  color: rgba(75,138,244,0.04); pointer-events: none; user-select: none;
+}
+.hero-bg-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(75,138,244,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(75,138,244,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-content { position: relative; z-index: 1; max-width: 1100px; width: 100%; }
+.module-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(75,138,244,0.12); border: 1px solid rgba(75,138,244,0.3);
+  color: var(--accent); padding: 6px 18px; border-radius: 24px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.module-pill-dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 {
+  font-size: 72px; font-weight: 900; color: var(--white); line-height: 1.08;
+  margin-bottom: 28px; letter-spacing: -0.02em;
+}
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero-desc {
+  font-size: 18px; color: rgba(255,255,255,0.6); line-height: 1.85;
+  max-width: 600px; margin-bottom: 72px; text-align: justify;
+}
+.hero-kpi {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; max-width: 900px;
+}
+.kpi-card {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px; padding: 28px 24px;
+}
+.kpi-num {
+  font-size: 40px; font-weight: 900; color: var(--accent); line-height: 1;
+}
+.kpi-unit { font-size: 16px; color: rgba(255,255,255,0.45); margin-left: 4px; }
+.kpi-label { margin-top: 10px; font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+
+/* SECTION WRAPPER */
+.section {
+  padding: 100px 80px;
+}
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-alt { background: var(--bg); }
+.section-dark { background: var(--dark); }
+
+.section-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+}
+.section-dark .section-eyebrow { color: rgba(75,138,244,0.8); }
+.section-title {
+  font-size: 44px; font-weight: 900; color: var(--text); line-height: 1.15; margin-bottom: 12px;
+}
+.section-dark .section-title { color: var(--white); }
+.section-subtitle {
+  font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 640px; text-align: justify;
+}
+.section-dark .section-subtitle { color: rgba(255,255,255,0.55); }
+.title-bar { width: 44px; height: 4px; background: var(--accent); border-radius: 2px; margin: 16px 0 56px; }
+
+/* SPLIT LAYOUT */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.split-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 64px; align-items: center; }
+
+/* PLAYER CARDS */
+.player-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.player-card {
+  border-radius: 16px; overflow: hidden; border: 1px solid var(--border);
+}
+.player-card-header {
+  padding: 20px 24px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.player-name { font-size: 18px; font-weight: 800; }
+.player-body { padding: 0 24px 24px; }
+.player-metric {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.player-metric:last-child { border-bottom: none; }
+.metric-label { color: var(--muted); }
+.metric-val { font-weight: 700; font-size: 14px; }
+.val-red { color: var(--red); }
+.val-green { color: var(--green); }
+.val-blue { color: var(--primary); }
+
+.card-decline { background: #FFF8F8; border-color: #FECACA; }
+.card-decline .player-name { color: var(--red); }
+.card-grow { background: #F0FDF8; border-color: #A7F3D0; }
+.card-grow .player-name { color: #059669; }
+.card-neutral { background: var(--bg); }
+.card-neutral .player-name { color: var(--primary); }
+
+/* TREND CARDS */
+.trend-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 56px; }
+.trend-card {
+  background: var(--white); border-radius: 20px; padding: 40px;
+  border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.trend-num {
+  font-size: 80px; font-weight: 900; color: rgba(75,138,244,0.08);
+  position: absolute; top: -10px; right: 16px; line-height: 1;
+  pointer-events: none;
+}
+.trend-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: var(--accent-light); display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 20px;
+}
+.trend-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--text); }
+.trend-body { font-size: 14px; color: var(--muted); line-height: 1.75; text-align: justify; }
+.trend-tag {
+  display: inline-block; margin-top: 16px;
+  background: var(--accent-light); color: var(--primary);
+  font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+/* CHART */
+.chart-box {
+  background: var(--white); border-radius: 20px; padding: 40px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 32px rgba(26,63,212,0.06);
+}
+.chart-box canvas { display: block; }
+.chart-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.chart-subtitle { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+.chart-legend {
+  display: flex; flex-wrap: wrap; gap: 20px; margin-top: 24px;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* OPPORTUNITY BOX */
+.opp-box {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+  border-radius: 24px; padding: 60px; color: var(--white);
+  position: relative; overflow: hidden; margin-top: 64px;
+}
+.opp-box::before {
+  content: '→';
+  position: absolute; right: 40px; top: 50%; transform: translateY(-50%);
+  font-size: 200px; color: rgba(255,255,255,0.04); font-weight: 900;
+}
+.opp-box h3 { font-size: 32px; font-weight: 900; margin-bottom: 20px; }
+.opp-box h3 span { color: var(--accent); }
+.opp-body { font-size: 16px; color: rgba(255,255,255,0.75); line-height: 1.85; max-width: 760px; text-align: justify; }
+.opp-stats { display: flex; gap: 48px; margin-top: 40px; }
+.opp-stat-num { font-size: 36px; font-weight: 900; color: var(--accent); }
+.opp-stat-label { font-size: 13px; color: rgba(255,255,255,0.55); margin-top: 4px; }
+
+/* MARKET SIZE VISUAL */
+.market-bars { display: flex; flex-direction: column; gap: 16px; }
+.mbar-item { display: flex; align-items: center; gap: 16px; }
+.mbar-label { width: 100px; font-size: 13px; font-weight: 600; color: var(--text); text-align: right; }
+.mbar-track {
+  flex: 1; height: 36px; background: var(--border); border-radius: 8px; overflow: hidden; position: relative;
+}
+.mbar-fill {
+  height: 100%; border-radius: 8px; display: flex; align-items: center; padding-left: 14px;
+  font-size: 12px; font-weight: 700; color: white; transition: width 1.2s ease;
+}
+.mbar-val { width: 80px; font-size: 13px; font-weight: 700; color: var(--text); }
+
+/* WINDOW SECTION */
+.window-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.window-card {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px; padding: 36px 28px;
+}
+.window-icon { font-size: 32px; margin-bottom: 16px; }
+.window-title { font-size: 17px; font-weight: 800; color: white; margin-bottom: 12px; }
+.window-body { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.7; text-align: justify; }
+.window-badge {
+  margin-top: 16px; display: inline-block;
+  background: rgba(75,138,244,0.2); color: var(--accent);
+  font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 12px;
+}
+
+/* CONCLUSION */
+.conclusion-row {
+  display: grid; grid-template-columns: 2fr 1px 2fr; gap: 0; margin-top: 64px;
+}
+.conclusion-divider { background: var(--border); }
+.conclusion-col { padding: 0 48px; }
+.conclusion-col:first-child { padding-left: 0; }
+.conclusion-col:last-child { padding-right: 0; }
+.conclusion-label { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+.conclusion-text { font-size: 15px; color: var(--text); line-height: 1.8; }
+
+/* PAGE FOOTER */
+.page-footer {
+  background: var(--dark); padding: 40px 80px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-brand { color: rgba(255,255,255,0.4); font-size: 12px; }
+.footer-nav { display: flex; gap: 24px; }
+.footer-nav a {
+  color: rgba(255,255,255,0.4); text-decoration: none; font-size: 12px;
+  transition: color 0.2s;
+}
+.footer-nav a:hover { color: var(--accent); }
+
+@media (max-width: 1024px) {
+  .hero { padding: 100px 40px 80px; }
+  .hero h1 { font-size: 48px; }
+  .hero-kpi { grid-template-columns: repeat(2,1fr); }
+  .section { padding: 72px 40px; }
+  .split, .split-3-2 { grid-template-columns: 1fr; gap: 48px; }
+  .trend-grid { grid-template-columns: 1fr; }
+  .window-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="topnav-left">
+    <img src="yowant_white.png" alt="遥望科技" style="height:24px;vertical-align:middle;">
+    <span class="nav-sep">/</span>
+    <span class="nav-module">○ 01 · 行业深度分析</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">总览</a>
+    <a href="01_industry.html" class="active">01 行业分析</a>
+    <a href="02_competitive.html">02 竞品分析</a>
+    <a href="03_opportunity.html">03 机会分析</a>
+    <a href="04_business_model.html">04 商业模式</a>
+    <a href="05_operations.html">05 运营设计</a>
+    <a href="06_feasibility.html">06 可行性</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-bg-num">01</div>
+  <div class="hero-content">
+    <div class="module-pill">
+      <span class="module-pill-dot"></span>
+      INDUSTRY ANALYSIS · 行业深度分析
+    </div>
+    <h1>行业在<em>剧烈重组</em><br>不是衰退，是<em>迁徙</em></h1>
+    <p class="hero-desc">
+      中国超市零售市场总规模仍超过8万亿元，但内部正在经历一场前所未有的结构性分化。
+      读懂这场迁徙，是所有战略判断的前提。
+    </p>
+    <div class="hero-kpi">
+      <div class="kpi-card">
+        <div><span class="kpi-num">8</span><span class="kpi-unit">万亿</span></div>
+        <div class="kpi-label">中国超市零售市场年规模</div>
+      </div>
+      <div class="kpi-card">
+        <div><span class="kpi-num">–18%</span></div>
+        <div class="kpi-label">大型超市过去3年平均营收降幅</div>
+      </div>
+      <div class="kpi-card">
+        <div><span class="kpi-num">+23%</span></div>
+        <div class="kpi-label">社区/便利业态近3年复合增速</div>
+      </div>
+      <div class="kpi-card">
+        <div><span class="kpi-num">65%</span></div>
+        <div class="kpi-label">社区超市当前连锁化率（仍极低）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: 结构性分化 -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Structural Shift · 01</p>
+    <h2 class="section-title">大店在死，小店在活</h2>
+    <p class="section-subtitle">这不是短期波动，是消费重力中心的永久性迁移。财务数据已经给出清晰答案。</p>
+    <div class="title-bar"></div>
+
+    <div class="split">
+      <div>
+        <p style="font-size:15px;color:var(--muted);line-height:1.9;margin-bottom:28px;">
+          2020年以来，中国大型商超（3000㎡以上）经历了持续的营收下滑、门店关闭与估值收缩。
+          与此同时，以社区为中心的中小业态实现了逆势增长。
+          这种分化已不是个案，而是系统性的业态更迭。
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:#FFF1F2;border-radius:14px;padding:24px;">
+            <div style="font-size:32px;font-weight:900;color:var(--red);">– 100+</div>
+            <div style="font-size:13px;color:#6B2C2C;margin-top:8px;">永辉2023年净关闭门店数</div>
+          </div>
+          <div style="background:#FFF1F2;border-radius:14px;padding:24px;">
+            <div style="font-size:32px;font-weight:900;color:var(--red);">200→10</div>
+            <div style="font-size:13px;color:#6B2C2C;margin-top:8px;">家乐福中国门店数锐减</div>
+          </div>
+          <div style="background:#F0FDF8;border-radius:14px;padding:24px;">
+            <div style="font-size:32px;font-weight:900;color:var(--green);">盈利</div>
+            <div style="font-size:13px;color:#064E3B;margin-top:8px;">盒马2024年宣布阶段性盈利</div>
+          </div>
+          <div style="background:#F0FDF8;border-radius:14px;padding:24px;">
+            <div style="font-size:32px;font-weight:900;color:var(--green);">垄断</div>
+            <div style="font-size:13px;color:#064E3B;margin-top:8px;">胖东来河南形成区域垄断</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="chart-box">
+          <div class="chart-title">主要零售商近3年营收趋势对比</div>
+          <div class="chart-subtitle">指数化处理（2021年=100），反映相对变化幅度</div>
+          <div style="position:relative;height:280px;width:100%;">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: 头部玩家表现 -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Player Analysis · 02</p>
+    <h2 class="section-title">头部玩家的真实现状</h2>
+    <p class="section-subtitle">数字背后是结构性困境——不是经营不善，是业态本身正在被时代淘汰。</p>
+    <div class="title-bar"></div>
+
+    <div class="player-grid">
+      <!-- 永辉 -->
+      <div class="player-card card-decline">
+        <div class="player-card-header">
+          <div>
+            <div class="player-name">永辉超市</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">传统大卖场代表</div>
+          </div>
+          <span style="background:#FEE2E2;color:var(--red);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">收缩中</span>
+        </div>
+        <div class="player-body">
+          <div class="player-metric">
+            <span class="metric-label">营收峰值</span>
+            <span class="metric-val">~900亿元（2020年）</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">2023年营收</span>
+            <span class="metric-val val-red">约780亿元 ↓</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">2023年净利润</span>
+            <span class="metric-val val-red">亏损超13亿元</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">2023年净关店</span>
+            <span class="metric-val val-red">超100家</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">当前战略</span>
+            <span class="metric-val" style="color:var(--orange);">转型社区化 / 胖东来改造</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 家乐福 -->
+      <div class="player-card card-decline">
+        <div class="player-card-header">
+          <div>
+            <div class="player-name">家乐福中国</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">外资大卖场代表</div>
+          </div>
+          <span style="background:#FEE2E2;color:var(--red);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">几近退出</span>
+        </div>
+        <div class="player-body">
+          <div class="player-metric">
+            <span class="metric-label">峰值门店数</span>
+            <span class="metric-val">超200家</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">当前门店数</span>
+            <span class="metric-val val-red">不足10家</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">关键事件</span>
+            <span class="metric-val val-red">2019年苏宁收购，持续亏损</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">当前状态</span>
+            <span class="metric-val val-red">市场实质退出</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">失败根因</span>
+            <span class="metric-val" style="color:var(--muted);">外资运营成本 + 本土化失败</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 高鑫/大润发 -->
+      <div class="player-card card-decline">
+        <div class="player-card-header">
+          <div>
+            <div class="player-name">高鑫零售（大润发）</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">华东大卖场龙头</div>
+          </div>
+          <span style="background:#FEF3C7;color:var(--orange);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">被转让</span>
+        </div>
+        <div class="player-body">
+          <div class="player-metric">
+            <span class="metric-label">关键事件</span>
+            <span class="metric-val val-red">阿里以低于账面价出售</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">买方</span>
+            <span class="metric-val">德弘资本（私募）</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">信号意义</span>
+            <span class="metric-val val-red">战略级互联网巨头放弃大卖场</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">估值趋势</span>
+            <span class="metric-val val-red">持续缩水，低于峰值60%+</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">当前战略</span>
+            <span class="metric-val" style="color:var(--orange);">探索M会员店 + 小润发</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 盒马 -->
+      <div class="player-card card-grow">
+        <div class="player-card-header">
+          <div>
+            <div class="player-name">盒马鲜生</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">即时零售超市代表</div>
+          </div>
+          <span style="background:#D1FAE5;color:#059669;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">阶段盈利</span>
+        </div>
+        <div class="player-body">
+          <div class="player-metric">
+            <span class="metric-label">成立时间</span>
+            <span class="metric-val">2016年（运营近10年）</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">2024年里程碑</span>
+            <span class="metric-val val-green">宣布阶段性盈利</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">模式特点</span>
+            <span class="metric-val val-blue">3000㎡+前店后仓，30分钟达</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">盈亏生死线</span>
+            <span class="metric-val" style="color:var(--orange);">日均1500单+客单价75元</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">社区尝试</span>
+            <span class="metric-val val-red">盒马邻里已关闭</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 胖东来 -->
+      <div class="player-card card-grow">
+        <div class="player-card-header">
+          <div>
+            <div class="player-name">胖东来</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">地方特色连锁标杆</div>
+          </div>
+          <span style="background:#D1FAE5;color:#059669;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">行业标杆</span>
+        </div>
+        <div class="player-body">
+          <div class="player-metric">
+            <span class="metric-label">核心优势</span>
+            <span class="metric-val val-green">极致本地化 + 员工文化</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">区域格局</span>
+            <span class="metric-val val-green">河南市场近乎垄断</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">坪效水平</span>
+            <span class="metric-val val-green">50-100元/㎡/天（行业3-5倍）</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">行业地位</span>
+            <span class="metric-val val-green">全行业改造学习对象</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">扩张策略</span>
+            <span class="metric-val" style="color:var(--orange);">主动拒绝全国扩张</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 山姆 -->
+      <div class="player-card card-neutral">
+        <div class="player-card-header">
+          <div>
+            <div class="player-name">山姆会员店</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;">会员制超市代表</div>
+          </div>
+          <span style="background:var(--accent-light);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;">逆势增长</span>
+        </div>
+        <div class="player-body">
+          <div class="player-metric">
+            <span class="metric-label">中国门店</span>
+            <span class="metric-val val-blue">48家（持续扩张中）</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">会员数</span>
+            <span class="metric-val val-blue">超500万付费会员</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">单店年销售</span>
+            <span class="metric-val val-blue">约15-20亿元</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">核心差异</span>
+            <span class="metric-val val-blue">精选SKU+自有品牌+会员粘性</span>
+          </div>
+          <div class="player-metric">
+            <span class="metric-label">社区适配性</span>
+            <span class="metric-val val-red">极低（大面积+大包装强依赖）</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: 四大趋势 -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Irreversible Trends · 03</p>
+    <h2 class="section-title">四大不可逆消费趋势</h2>
+    <p class="section-subtitle">这些变化不是周期性波动，而是消费者行为模式的结构性改变，不会随经济周期逆转。</p>
+    <div class="title-bar"></div>
+
+    <div class="trend-grid">
+      <div class="trend-card">
+        <div class="trend-num">01</div>
+        <div class="trend-icon">🧭</div>
+        <div class="trend-title">便利性已超越价格，成为第一选择要素</div>
+        <p class="trend-body">
+          消费者的时间成本持续提升，购物决策逻辑已从「哪里更便宜」转向「哪里更方便」。
+          居民愿意为距离近、等待时间短支付溢价。离家越近的门店，竞争力越强。
+          这是消费升级带来的不可逆迁移，在城市中产群体中尤为显著。
+        </p>
+        <div class="trend-tag">就近消费溢价持续扩大</div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-num">02</div>
+        <div class="trend-icon">🥦</div>
+        <div class="trend-title">生鲜消费从周末囤货变成每日鲜购</div>
+        <p class="trend-body">
+          家庭买菜逻辑从「周末一次性采购」演变为「今天吃什么买什么」。
+          冷链配送的普及、食品安全意识提升、小家庭结构增加，共同推动日鲜购买成为核心场景。
+          社区超市扎根小区门口的物理优势因此被持续放大，替代了大卖场的引流价值。
+        </p>
+        <div class="trend-tag">生鲜日购频次 > 周购频次</div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-num">03</div>
+        <div class="trend-icon">🏘️</div>
+        <div class="trend-title">超市被期待承担更多社区生活服务功能</div>
+        <p class="trend-body">
+          代收快递、充值缴费、便民维修、社区团购自提——消费者希望社区门店成为生活服务枢纽，
+          而不仅仅是卖货的地方。这是线上平台无法满足的线下在场需求，
+          也是大卖场因距离太远而无法提供的即时服务。
+          最靠近居民的门店天然具备这个角色。
+        </p>
+        <div class="trend-tag">服务承载价值超过货物价值</div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-num">04</div>
+        <div class="trend-icon">📊</div>
+        <div class="trend-title">社区超市连锁化率极低，窗口期尚存</div>
+        <p class="trend-body">
+          中国社区超市市场高度分散，大量门店仍是运营低效的夫妻店，连锁化率不足35%。
+          对比便利店赛道（连锁化率已超55%），社区超市至今没有跑出全国性垄断品牌。
+          这意味着新玩家仍有充足的入局窗口，但参考便利店发展规律，
+          窗口期预计在未来3-5年内显著收窄。
+        </p>
+        <div class="trend-tag">品牌空白窗口期 3-5年</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: 市场格局图 -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Market Structure · 04</p>
+    <h2 class="section-title">业态格局重构：谁在消亡，谁在崛起</h2>
+    <p class="section-subtitle">从市场份额流向看，消费者的脚在投票。</p>
+    <div class="title-bar"></div>
+
+    <div class="split">
+      <div>
+        <div class="chart-box">
+          <div class="chart-title">各业态近3年市场份额变化趋势</div>
+          <div class="chart-subtitle">2021→2024，相对份额变化（百分点）</div>
+          <div style="position:relative;height:320px;width:100%;">
+            <canvas id="shareChart"></canvas>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-size:22px;font-weight:800;margin-bottom:20px;">社区超市的规模机会</h3>
+        <p style="font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:28px;">
+          中国社区零售市场规模约 <strong style="color:var(--primary);">3.2万亿</strong> 元，
+          其中社区超市（300-1500㎡）占比约 <strong style="color:var(--primary);">40%</strong>，
+          即约 <strong style="color:var(--primary);">1.3万亿</strong> 元。
+        </p>
+        <p style="font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:28px;">
+          当前市场高度分散，CR5（前5名连锁品牌）合计份额不足15%。
+          连锁化若提升至50%，头部连锁品牌的天花板规模将超过 <strong style="color:var(--primary);">2000亿</strong> 元。
+        </p>
+        <div class="market-bars">
+          <div class="mbar-item">
+            <div class="mbar-label">大卖场</div>
+            <div class="mbar-track">
+              <div class="mbar-fill" style="width:28%;background:#EF4444;">28%</div>
+            </div>
+            <div class="mbar-val" style="color:var(--red);">↓ 收缩</div>
+          </div>
+          <div class="mbar-item">
+            <div class="mbar-label">社区超市</div>
+            <div class="mbar-track">
+              <div class="mbar-fill" style="width:42%;background:#10B981;">42%</div>
+            </div>
+            <div class="mbar-val" style="color:var(--green);">↑ 增长</div>
+          </div>
+          <div class="mbar-item">
+            <div class="mbar-label">即时零售</div>
+            <div class="mbar-track">
+              <div class="mbar-fill" style="width:15%;background:#4B8AF4;">15%</div>
+            </div>
+            <div class="mbar-val" style="color:var(--primary);">↑ 快速增</div>
+          </div>
+          <div class="mbar-item">
+            <div class="mbar-label">会员制</div>
+            <div class="mbar-track">
+              <div class="mbar-fill" style="width:8%;background:#8B5CF6;">8%</div>
+            </div>
+            <div class="mbar-val" style="color:#8B5CF6;">→ 稳定</div>
+          </div>
+          <div class="mbar-item">
+            <div class="mbar-label">硬折扣</div>
+            <div class="mbar-track">
+              <div class="mbar-fill" style="width:7%;background:#F59E0B;">7%</div>
+            </div>
+            <div class="mbar-val" style="color:var(--orange);">↑ 新兴</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: 机会窗口 -->
+<section class="section section-dark">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Opportunity Window · 05</p>
+    <h2 class="section-title">窗口已开，但不会永远等着</h2>
+    <p class="section-subtitle">参照便利店连锁化发展规律，社区超市的品牌化窗口期约3-5年。之后头部效应会迅速锁定格局。</p>
+    <div class="title-bar"></div>
+
+    <div class="window-grid">
+      <div class="window-card">
+        <div class="window-icon">🏪</div>
+        <div class="window-title">市场空白尚在</div>
+        <p class="window-body">
+          全国社区超市约120万家门店，连锁化率低于35%。
+          前三名品牌合计市占率不足8%，远未到赢家通吃阶段。
+          在一线和强二线城市，质价比社区超市需求明显未被满足。
+        </p>
+        <span class="window-badge">空间充足</span>
+      </div>
+      <div class="window-card">
+        <div class="window-icon">⏰</div>
+        <div class="window-title">竞争尚未锁定</div>
+        <p class="window-body">
+          大厂（永辉mini、盒马邻里）的社区探索已基本失败，
+          不存在"有资本做后盾的全国性强竞争者"。
+          地方特色连锁（胖东来等）主动拒绝扩张，区域壁垒暂时保护了空间。
+        </p>
+        <span class="window-badge">无强竞对手</span>
+      </div>
+      <div class="window-card">
+        <div class="window-icon">📈</div>
+        <div class="window-title">消费升级持续驱动</div>
+        <p class="window-body">
+          Z世代家庭购物习惯与60/70后完全不同：
+          更愿意为品质买单、对价格敏感度相对较低、更依赖手机下单与即时配送。
+          这一群体正在成为社区超市的主力消费人群，品牌化的社区超市天然契合其需求。
+        </p>
+        <span class="window-badge">消费升级驱动</span>
+      </div>
+    </div>
+
+    <div class="opp-box">
+      <h3>核心结论：这是一场<span>业态迁徙</span>，不是市场萎缩</h3>
+      <p class="opp-body">
+        大型超市的衰退释放出的不是消费需求，而是消费场景。
+        这些需求并没有消失，而是在寻找更匹配当代生活方式的新载体。
+        社区超市正是这个载体——它离消费者更近、更懂每日鲜购、更能承担生活服务角色。
+        谁先在这个业态里跑出可复制的标准模型，谁就能在接下来5年内占据战略高地。
+      </p>
+      <div class="opp-stats">
+        <div>
+          <div class="opp-stat-num">1.3万亿</div>
+          <div class="opp-stat-label">可寻址市场规模</div>
+        </div>
+        <div>
+          <div class="opp-stat-num">35%</div>
+          <div class="opp-stat-label">当前连锁化率（极低）</div>
+        </div>
+        <div>
+          <div class="opp-stat-num">3-5年</div>
+          <div class="opp-stat-label">品牌入局窗口期</div>
+        </div>
+        <div>
+          <div class="opp-stat-num">0</div>
+          <div class="opp-stat-label">全国性垄断品牌数量</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAGE FOOTER -->
+<footer class="page-footer">
+  <div class="footer-brand">遥望科技 · 社区超市战略报告 · 2026 · 内部文件</div>
+  <div class="footer-nav">
+    <a href="index.html">← 返回总览</a>
+    <a href="02_competitive.html">02 竞品分析 →</a>
+  </div>
+</footer>
+
+<script>
+// Revenue trend chart
+const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+new Chart(revenueCtx, {
+  type: 'line',
+  data: {
+    labels: ['2021', '2022', '2023', '2024E', '2025E'],
+    datasets: [
+      {
+        label: '永辉超市',
+        data: [100, 93, 87, 82, 80],
+        borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.06)',
+        tension: 0.4, borderWidth: 2.5, pointRadius: 4, fill: true
+      },
+      {
+        label: '大润发/高鑫',
+        data: [100, 91, 85, 80, 76],
+        borderColor: '#F59E0B', backgroundColor: 'rgba(245,158,11,0.05)',
+        tension: 0.4, borderWidth: 2.5, pointRadius: 4, fill: true
+      },
+      {
+        label: '盒马鲜生',
+        data: [100, 118, 132, 148, 162],
+        borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.06)',
+        tension: 0.4, borderWidth: 2.5, pointRadius: 4, fill: true
+      },
+      {
+        label: '山姆（中国）',
+        data: [100, 115, 128, 142, 155],
+        borderColor: '#4B8AF4', backgroundColor: 'rgba(75,138,244,0.05)',
+        tension: 0.4, borderWidth: 2.5, pointRadius: 4, fill: true
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 20, font: { size: 12 } } },
+      tooltip: { mode: 'index', intersect: false }
+    },
+    scales: {
+      y: {
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { callback: v => v + '', font: { size: 11 } },
+        title: { display: true, text: '指数（2021=100）', font: { size: 11 } }
+      },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// Market share change chart
+const shareCtx = document.getElementById('shareChart').getContext('2d');
+new Chart(shareCtx, {
+  type: 'bar',
+  data: {
+    labels: ['大型超市', '便利店', '社区超市', '即时零售', '会员制', '硬折扣'],
+    datasets: [{
+      label: '市场份额变化（百分点）',
+      data: [-6.2, -0.8, 4.1, 5.3, 0.9, 1.2],
+      backgroundColor: [
+        'rgba(239,68,68,0.75)',
+        'rgba(245,158,11,0.65)',
+        'rgba(16,185,129,0.85)',
+        'rgba(75,138,244,0.85)',
+        'rgba(139,92,246,0.75)',
+        'rgba(245,158,11,0.8)'
+      ],
+      borderColor: ['#EF4444','#F59E0B','#10B981','#4B8AF4','#8B5CF6','#F59E0B'],
+      borderWidth: 2, borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.parsed.y > 0 ? '+' : ''}${ctx.parsed.y} 百分点` } }
+    },
+    scales: {
+      y: {
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: { callback: v => (v > 0 ? '+' : '') + v + 'pp', font: { size: 11 } }
+      },
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>

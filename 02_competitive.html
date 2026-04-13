@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模块02 · 竞品全景分析 | 遥望社区超市战略报告</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #1A3FD4; --dark: #0D1B5E; --accent: #4B8AF4;
+  --accent-light: #EBF0FF; --green: #10B981; --red: #EF4444;
+  --orange: #F59E0B; --purple: #8B5CF6; --text: #1A1A2E;
+  --muted: #6B7280; --border: #E5E7EB; --bg: #F8F9FE; --white: #FFFFFF;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif; color:var(--text); background:var(--white); overflow-x:hidden; }
+
+.topnav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  background:rgba(13,27,94,0.96); backdrop-filter:blur(16px);
+  padding:0 48px; height:60px; display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid rgba(75,138,244,0.2);
+}
+.nav-brand { color:var(--accent); font-size:15px; font-weight:700; }
+.nav-sep { color:rgba(255,255,255,0.2); font-size:18px; margin:0 12px; }
+.nav-module { color:rgba(255,255,255,0.7); font-size:13px; }
+.nav-back { color:rgba(255,255,255,0.6); font-size:12px; text-decoration:none; padding:6px 14px; border:1px solid rgba(255,255,255,0.15); border-radius:20px; }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 12px; padding: 5px 12px; border-radius: 6px; transition: all 0.2s; }
+.nav-links a:hover, .nav-links a.active { color: white; background: rgba(255,255,255,0.12); }
+
+.hero {
+  min-height:100vh; background:var(--dark);
+  display:flex; align-items:center; padding:100px 80px 80px;
+  position:relative; overflow:hidden;
+}
+.hero-bg-num {
+  position:absolute; right:-80px; top:50%; transform:translateY(-50%);
+  font-size:480px; font-weight:900; line-height:1;
+  color:rgba(75,138,244,0.04); pointer-events:none;
+}
+.hero-bg-grid {
+  position:absolute; inset:0;
+  background-image:linear-gradient(rgba(75,138,244,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(75,138,244,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.hero-content { position:relative; z-index:1; max-width:1100px; width:100%; }
+.module-pill {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(75,138,244,0.12); border:1px solid rgba(75,138,244,0.3);
+  color:var(--accent); padding:6px 18px; border-radius:24px;
+  font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:36px;
+}
+.pill-dot { width:6px; height:6px; background:var(--accent); border-radius:50%; animation:blink 2s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.hero h1 { font-size:68px; font-weight:900; color:var(--white); line-height:1.08; margin-bottom:28px; }
+.hero h1 em { font-style:normal; color:var(--accent); }
+.hero-desc { font-size:17px; color:rgba(255,255,255,0.6); line-height:1.85; max-width:640px; margin-bottom:64px; text-align:justify; }
+.hero-cats { display:flex; flex-wrap:wrap; gap:12px; }
+.cat-chip {
+  padding:8px 20px; border-radius:24px; font-size:13px; font-weight:700;
+  border:1px solid; cursor:default;
+}
+
+.section { padding:100px 80px; }
+.section-inner { max-width:1100px; margin:0 auto; }
+.section-alt { background:var(--bg); }
+.section-dark { background:var(--dark); }
+.section-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+.section-title { font-size:44px; font-weight:900; color:var(--text); line-height:1.15; margin-bottom:12px; }
+.section-dark .section-title { color:var(--white); }
+.section-subtitle { font-size:15px; color:var(--muted); line-height:1.75; max-width:700px; text-align:justify; }
+.section-dark .section-subtitle { color:rgba(255,255,255,0.55); }
+.title-bar { width:44px; height:4px; background:var(--accent); border-radius:2px; margin:16px 0 56px; }
+
+/* RADAR GRID */
+.radar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+.radar-card {
+  background:var(--white); border-radius:20px; padding:28px 24px;
+  border:1px solid var(--border); box-shadow:0 2px 16px rgba(26,63,212,0.05);
+}
+.radar-card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.radar-cat { font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; }
+.radar-brands { display:flex; flex-wrap:wrap; gap:6px; margin-top:16px; }
+.brand-chip {
+  font-size:11px; padding:3px 10px; border-radius:10px; font-weight:600;
+}
+
+/* WHY NOT TABLE */
+.why-list { display:flex; flex-direction:column; border-radius:16px; overflow:hidden; border:1px solid var(--border); }
+.why-card { background:white; border-left:4px solid transparent; transition:background 0.15s; }
+.why-card:hover { background:#FAFBFF; }
+.why-card + .why-card { border-top:1px solid var(--border); }
+.why-card-head { display:flex; align-items:center; flex-wrap:wrap; gap:10px; padding:14px 20px 10px; }
+.why-cat { display:inline-flex; align-items:center; padding:4px 12px; border-radius:8px; font-size:12px; font-weight:700; white-space:nowrap; min-width:96px; justify-content:center; }
+.why-brands { font-size:14px; font-weight:700; color:var(--text); white-space:nowrap; }
+.why-tried-pill { margin-left:auto; display:inline-flex; align-items:center; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; white-space:nowrap; }
+.why-tried-sub { font-size:11px; color:var(--muted); white-space:nowrap; }
+.why-body { padding:0 20px 14px; font-size:13px; color:var(--muted); line-height:1.9; text-align:justify; }
+.why-foot { display:flex; align-items:center; gap:10px; padding:10px 20px; background:var(--bg); border-top:1px solid var(--border); }
+.why-foot-tag { font-size:10px; font-weight:700; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase; white-space:nowrap; flex-shrink:0; }
+.why-foot-reason { font-size:13px; font-weight:700; }
+
+/* POSITIONING MAP */
+.position-wrap { position:relative; }
+.position-map {
+  width:100%; height:480px; background:var(--white);
+  border:1px solid var(--border); border-radius:20px; position:relative;
+  overflow:hidden;
+}
+.map-axis-h {
+  position:absolute; left:0; right:0; top:50%; height:1px;
+  background:var(--border);
+}
+.map-axis-v {
+  position:absolute; top:0; bottom:0; left:50%; width:1px;
+  background:var(--border);
+}
+.map-label-top { position:absolute; top:16px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--muted); font-weight:600; }
+.map-label-bottom { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--muted); font-weight:600; }
+.map-label-left { position:absolute; left:16px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--muted); font-weight:600; writing-mode:vertical-rl; }
+.map-label-right { position:absolute; right:16px; top:50%; transform:translateY(-50%); font-size:11px; color:var(--muted); font-weight:600; writing-mode:vertical-rl; }
+.map-dot {
+  position:absolute; border-radius:50%;
+  transform:translate(-50%,-50%);
+  display:flex; align-items:center; justify-content:center;
+  cursor:default; transition:all 0.2s;
+}
+.map-dot:hover { transform:translate(-50%,-50%) scale(1.2); z-index:10; }
+.map-dot-label {
+  position:absolute; top:-22px; white-space:nowrap;
+  font-size:10px; font-weight:700; color:var(--text);
+  background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px;
+  box-shadow:0 1px 4px rgba(0,0,0,0.1);
+}
+.map-star {
+  position:absolute; transform:translate(-50%,-50%);
+  cursor:default;
+}
+.map-star-inner {
+  width:40px; height:40px; border-radius:50%;
+  background:var(--primary); border:3px solid var(--accent);
+  display:flex; align-items:center; justify-content:center;
+  color:white; font-size:11px; font-weight:900;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100%{ box-shadow:0 0 0 0 rgba(75,138,244,0.4); }
+  50%{ box-shadow:0 0 0 12px rgba(75,138,244,0); }
+}
+
+/* INSIGHT STRIP */
+.insight-strip {
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);
+  border-radius:20px; padding:48px; color:var(--white); margin-top:56px;
+}
+.insight-strip h3 { font-size:26px; font-weight:900; margin-bottom:16px; }
+.insight-strip p { font-size:15px; opacity:0.85; line-height:1.85; max-width:800px; text-align:justify; }
+
+/* GAP ANALYSIS */
+.gap-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:48px; }
+.gap-card {
+  background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1);
+  border-radius:18px; padding:32px 28px;
+}
+.gap-card-icon { font-size:28px; margin-bottom:16px; }
+.gap-card-title { font-size:17px; font-weight:800; color:var(--white); margin-bottom:10px; }
+.gap-card-body { font-size:13px; color:rgba(255,255,255,0.6); line-height:1.75; text-align:justify; }
+.gap-highlight { color:var(--accent); font-weight:700; }
+
+/* DIMENSION LEGEND */
+.dim-legend { display:flex; flex-wrap:wrap; gap:16px; margin-bottom:40px; }
+.dim-item { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted); }
+.dim-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+.page-footer {
+  background:var(--dark); padding:40px 80px;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.footer-brand { color:rgba(255,255,255,0.4); font-size:12px; }
+.footer-nav { display:flex; gap:24px; }
+.footer-nav a { color:rgba(255,255,255,0.4); text-decoration:none; font-size:12px; }
+.footer-nav a:hover { color:var(--accent); }
+
+@media (max-width:1024px) {
+  .hero h1 { font-size:44px; }
+  .section { padding:72px 40px; }
+  .radar-grid { grid-template-columns:1fr; }
+  .gap-grid { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div style="display:flex;align-items:center;">
+    <img src="yowant_white.png" alt="遥望科技" style="height:24px;vertical-align:middle;">
+    <span class="nav-sep">/</span>
+    <span class="nav-module">○ 02 · 竞品全景分析</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">总览</a>
+    <a href="01_industry.html">01 行业分析</a>
+    <a href="02_competitive.html" class="active">02 竞品分析</a>
+    <a href="03_opportunity.html">03 机会分析</a>
+    <a href="04_business_model.html">04 商业模式</a>
+    <a href="05_operations.html">05 运营设计</a>
+    <a href="06_feasibility.html">06 可行性</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-bg-num">02</div>
+  <div class="hero-content">
+    <div class="module-pill">
+      <span class="pill-dot"></span>
+      COMPETITIVE ANALYSIS · 竞品全景分析
+    </div>
+    <h1>22个品牌，<em>6大赛道</em><br>为什么都没做<em>社区超市</em></h1>
+    <p class="hero-desc">
+      我们系统拆解了中国超市零售市场全部主流玩家，
+      用六维雷达模型衡量各自的能力边界，
+      并深度研究了他们为什么都没有、或没能在社区格局中成功。
+    </p>
+    <div class="hero-cats">
+      <span class="cat-chip" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:#DC2626;">传统大卖场 4个</span>
+      <span class="cat-chip" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.3);color:#D97706;">私域直播电商 3个</span>
+      <span class="cat-chip" style="background:rgba(75,138,244,0.12);border-color:rgba(75,138,244,0.3);color:var(--accent);">即时零售超市 4个</span>
+      <span class="cat-chip" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:#059669;">硬折扣超市 2个</span>
+      <span class="cat-chip" style="background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.3);color:var(--purple);">会员制超市 2个</span>
+      <span class="cat-chip" style="background:rgba(249,115,22,0.12);border-color:rgba(249,115,22,0.3);color:#EA580C;">地方特色连锁 7个</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: 维度说明 -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Radar Dimensions · 01</p>
+    <h2 class="section-title">六维评估模型</h2>
+    <p class="section-subtitle">六个维度选取的逻辑：既要反映当前竞争优势，也要揭示社区超市格局的关键成功要素。评分1-10，基于公开数据与行业调研综合评估。</p>
+    <div class="title-bar"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:64px;">
+      <div style="background:var(--bg);border-radius:16px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:28px;margin-bottom:12px;">💰</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">价格竞争力</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">相对市场的价格吸引力，是否能以更低价格提供同等价值的商品。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:16px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:28px;margin-bottom:12px;">⭐</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">品质/差异化选品</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">商品品质水准、自有品牌能力、差异化选品的深度与广度。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:16px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:28px;margin-bottom:12px;">⚡</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">即时便利性</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">到家配送速度、门店可及性、线上下单体验的综合便利程度。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:16px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:28px;margin-bottom:12px;">🏘️</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">社区运营深度</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">与所在社区的融合程度、熟客关系维护、本地化服务能力。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:16px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:28px;margin-bottom:12px;">🤖</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">数字化运营能力</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">技术体系、数据能力、App/小程序运营，以及供应链数字化水平。</div>
+      </div>
+      <div style="background:var(--bg);border-radius:16px;padding:28px;border:1px solid var(--border);">
+        <div style="font-size:28px;margin-bottom:12px;">🔁</div>
+        <div style="font-size:15px;font-weight:800;margin-bottom:8px;">品牌复购黏性</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">用户忠诚度、复购率、会员体系深度，是否能维持非价格竞争的用户关系。</div>
+      </div>
+    </div>
+
+    <!-- COMPARE CHART: Full-width, before individual radars -->
+    <div style="background:var(--white);border-radius:20px;padding:40px;border:1px solid var(--border);box-shadow:0 4px 24px rgba(26,63,212,0.06);margin-bottom:56px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;">
+        <div>
+          <div style="font-size:16px;font-weight:700;margin-bottom:6px;">六大赛道能力均值 vs 遥望目标</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">实线=各赛道均值，虚线=遥望战略目标定位</div>
+          <div style="position:relative;height:360px;width:100%;"><canvas id="radarCompare"></canvas></div>
+        </div>
+        <div style="padding-top:16px;">
+          <h3 style="font-size:20px;font-weight:800;margin-bottom:20px;">遥望的差异化切入空间</h3>
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div style="background:var(--bg);border-radius:14px;padding:20px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#4B8AF4;flex-shrink:0;"></div>
+                <div style="font-size:14px;font-weight:700;">社区运营深度：传统玩家的死穴</div>
+              </div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;">大卖场距离远、即时零售无实体、会员制需大店——没有一类现有玩家能真正扎根社区。这是遥望的核心机会点。</p>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;padding:20px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#10B981;flex-shrink:0;"></div>
+                <div style="font-size:14px;font-weight:700;">即时便利 × 社区深度：两个都要</div>
+              </div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;">社区超市有地理优势但缺数字化；即时零售有配送能力但缺社区关系。遥望目标是同时拿到两者——门店即节点，节点即关系。</p>
+            </div>
+            <div style="background:var(--bg);border-radius:14px;padding:20px;border:1px solid var(--border);">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+                <div style="width:10px;height:10px;border-radius:50%;background:#8B5CF6;flex-shrink:0;"></div>
+                <div style="font-size:14px;font-weight:700;">品质选品：MCN基因带来的天然优势</div>
+              </div>
+              <p style="font-size:13px;color:var(--muted);line-height:1.7;">自孵化品牌具备内容背书。社区门店成为品牌体验中心，差异化选品是普通社区超市无法复制的能力。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RADAR CHARTS GRID -->
+    <p style="font-size:13px;color:var(--muted);margin-bottom:24px;text-align:center;">↓ 各赛道六维雷达详细拆解</p>
+    <div class="radar-grid">
+
+      <!-- 传统大卖场 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:#DC2626;">传统大卖场</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">规模大、坪效低、转型难</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar1"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:#FEE2E2;color:#DC2626;">大润发</span>
+          <span class="brand-chip" style="background:#FEE2E2;color:#DC2626;">永辉</span>
+          <span class="brand-chip" style="background:#FEE2E2;color:#DC2626;">世纪联华</span>
+          <span class="brand-chip" style="background:#FEE2E2;color:#DC2626;">沃尔玛</span>
+        </div>
+      </div>
+
+      <!-- 私域直播 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:#D97706;">私域直播电商</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">线上强、线下弱、无实体基因</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar2"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:#FEF3C7;color:#D97706;">东方甄选</span>
+          <span class="brand-chip" style="background:#FEF3C7;color:#D97706;">远方安选</span>
+          <span class="brand-chip" style="background:#FEF3C7;color:#D97706;">远方好物</span>
+        </div>
+      </div>
+
+      <!-- 即时零售 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:var(--accent);">即时零售超市</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">配送强、覆盖广、社区浅</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar3"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:var(--accent-light);color:var(--primary);">盒马</span>
+          <span class="brand-chip" style="background:var(--accent-light);color:var(--primary);">小象超市</span>
+          <span class="brand-chip" style="background:var(--accent-light);color:var(--primary);">快乐猴</span>
+          <span class="brand-chip" style="background:var(--accent-light);color:var(--primary);">京东超市</span>
+        </div>
+      </div>
+
+      <!-- 硬折扣 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:#059669;">硬折扣超市</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">价格强、标准化、本地化弱</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar4"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:#D1FAE5;color:#059669;">奥乐齐</span>
+          <span class="brand-chip" style="background:#D1FAE5;color:#059669;">超盒算NB</span>
+        </div>
+      </div>
+
+      <!-- 会员制 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:var(--purple);">会员制超市</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">品质极高、便利极低</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar5"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:#EDE9FE;color:var(--purple);">山姆</span>
+          <span class="brand-chip" style="background:#EDE9FE;color:var(--purple);">开市客</span>
+        </div>
+      </div>
+
+      <!-- 地方特色 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:#EA580C;">地方特色连锁</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">社区深、品质高、难以复制</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar6"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:#FFEDD5;color:#EA580C;">胖东来</span>
+          <span class="brand-chip" style="background:#FFEDD5;color:#EA580C;">成山农场</span>
+          <span class="brand-chip" style="background:#FFEDD5;color:#EA580C;">鲜风生活</span>
+          <span class="brand-chip" style="background:#FFEDD5;color:#EA580C;">步步高</span>
+          <span class="brand-chip" style="background:#FFEDD5;color:#EA580C;">淘小胖</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: 为什么没做社区 -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Why Not Community · 02</p>
+    <h2 class="section-title">他们为什么没有做社区超市</h2>
+    <p class="section-subtitle">这不是因为市场机会不存在，而是各类玩家的基因、成本结构和商业逻辑决定了他们无法在社区格局中胜出。</p>
+    <div class="title-bar"></div>
+
+    <div class="why-list">
+
+      <!-- 传统大卖场 -->
+      <div class="why-card" style="border-left-color:#DC2626;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#FEE2E2;color:#DC2626;">传统大卖场</span>
+          <span class="why-brands">永辉 · 大润发</span>
+          <span class="why-tried-pill" style="background:#FEE2E2;color:#DC2626;">尝试过并已失败</span>
+          <span class="why-tried-sub">永辉mini / 大润发小店</span>
+        </div>
+        <div class="why-body">总部管控逻辑无法支撑小店灵活运营；大卖场SKU体系直接搬入小店导致选品错配；采购成本在小体量下没有规模优势；员工文化无法从大店迁移到小店；数字化投入集中在主力门店，mini店得不到支持</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">根本原因</span>
+          <span class="why-foot-reason" style="color:#DC2626;">组织基因与小店运营逻辑相悖</span>
+        </div>
+      </div>
+
+      <!-- 私域直播电商 -->
+      <div class="why-card" style="border-left-color:#D97706;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#FEF3C7;color:#D97706;">私域直播电商</span>
+          <span class="why-brands">东方甄选 · 远方系</span>
+          <span class="why-tried-pill" style="background:#F3F4F6;color:#6B7280;">极少 / 未涉足</span>
+          <span class="why-tried-sub">东方甄选曾尝试线下</span>
+        </div>
+        <div class="why-body">核心竞争力是内容和主播，而非零售运营；实体店会分散内容生产注意力；线上销售毛利高于实体零售毛利，没有动机开店；无线下供应链体系；开店会暴露履约能力短板，影响品牌形象</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">根本原因</span>
+          <span class="why-foot-reason" style="color:#D97706;">轻资产内容基因，抗拒重资产零售</span>
+        </div>
+      </div>
+
+      <!-- 即时零售超市 -->
+      <div class="why-card" style="border-left-color:#1A3FD4;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#EBF0FF;color:#1A3FD4;">即时零售超市</span>
+          <span class="why-brands">盒马 · 小象超市</span>
+          <span class="why-tried-pill" style="background:#FEE2E2;color:#DC2626;">尝试过并已收缩</span>
+          <span class="why-tried-sub">盒马邻里 / 前置仓模式</span>
+        </div>
+        <div class="why-body">盒马邻里：无门店仅靠配送，缺乏体验感和信任建立，用户获取成本高；前置仓模式：单纯依赖高频订单，SKU受限，无法提供超市完整体验；小体量门店无法支撑其配送网络密度要求；每单履约成本刚性，在低客单价社区难以盈利</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">根本原因</span>
+          <span class="why-foot-reason" style="color:#1A3FD4;">履约成本结构不适配社区单量</span>
+        </div>
+      </div>
+
+      <!-- 硬折扣超市 -->
+      <div class="why-card" style="border-left-color:#059669;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#D1FAE5;color:#059669;">硬折扣超市</span>
+          <span class="why-brands">奥乐齐 · 超盒算NB</span>
+          <span class="why-tried-pill" style="background:#FEF3C7;color:#D97706;">在社区边缘开店</span>
+          <span class="why-tried-sub">奥乐齐在上海社区有布局</span>
+        </div>
+        <div class="why-body">商业模式核心是极致SKU标准化（奥乐齐约1500 SKU），而社区运营需要高度本地化选品，两者存在根本矛盾；缺乏生鲜日鲜能力；低价定位吸引价格敏感人群，难以建立深度社区关系；门店密度无法覆盖大多数社区</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">根本原因</span>
+          <span class="why-foot-reason" style="color:#059669;">标准化 VS 本地化的根本矛盾</span>
+        </div>
+      </div>
+
+      <!-- 会员制超市 -->
+      <div class="why-card" style="border-left-color:#7C3AED;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#EDE9FE;color:#7C3AED;">会员制超市</span>
+          <span class="why-brands">山姆 · 开市客</span>
+          <span class="why-tried-pill" style="background:#F3F4F6;color:#6B7280;">从未尝试</span>
+          <span class="why-tried-sub">商业模式决定不可能</span>
+        </div>
+        <div class="why-body">会员制价值主张依赖大包装、大选择、周末目的地购物体验，这些都需要大面积门店；社区门店无法支撑会员费的心理价值；目标客群是有车族，社区步行客完全是不同人群；仓储型展示需要高度净空，社区底商无法提供</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">根本原因</span>
+          <span class="why-foot-reason" style="color:#7C3AED;">商业模式需要大店，社区格局需要小店</span>
+        </div>
+      </div>
+
+      <!-- 地方特色连锁 -->
+      <div class="why-card" style="border-left-color:#EA580C;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#FFEDD5;color:#EA580C;">地方特色连锁</span>
+          <span class="why-brands">胖东来 · 成山农场</span>
+          <span class="why-tried-pill" style="background:#D1FAE5;color:#059669;">本身就是社区型</span>
+          <span class="why-tried-sub">但有意不全国扩张</span>
+        </div>
+        <div class="why-body">胖东来主动拒绝全国扩张：创始人认为扩张会稀释文化，宁可做区域垄断而非全国连锁；其他品牌（成山农场等）资本和品牌力不足以支撑跨区域复制；高度依赖创始人个人运营风格，标准化输出能力弱；本地供应链不可移植</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">根本原因</span>
+          <span class="why-foot-reason" style="color:#EA580C;">区域基因无法规模化复制</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: 定位图 -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Positioning Map · 03</p>
+    <h2 class="section-title">竞争定位矩阵</h2>
+    <p class="section-subtitle">横轴：社区运营深度（左=弱/右=强）｜纵轴：即时便利能力（上=强/下=弱）</p>
+    <div class="title-bar"></div>
+
+    <div class="position-map">
+      <div class="map-axis-h"></div>
+      <div class="map-axis-v"></div>
+      <div class="map-label-top">即时便利性强</div>
+      <div class="map-label-bottom">即时便利性弱</div>
+      <div class="map-label-left">社区深度弱</div>
+      <div class="map-label-right">社区深度强</div>
+
+      <!-- 各品牌点位：left=社区深度（0-100%), top=即时便利性（100-0%即上=强） -->
+      <!-- 盒马: 即时强(高), 社区弱(左中) -->
+      <div class="map-dot" style="left:35%;top:10%;width:44px;height:44px;background:rgba(75,138,244,0.15);border:2px solid var(--accent);">
+        <div class="map-dot-label" style="color:var(--primary);">盒马</div>
+      </div>
+      <!-- 小象超市: 即时强, 社区弱 -->
+      <div class="map-dot" style="left:28%;top:16%;width:36px;height:36px;background:rgba(75,138,244,0.1);border:2px solid var(--accent);">
+        <div class="map-dot-label" style="top:-22px;">小象超市</div>
+      </div>
+      <!-- 京东超市/快乐猴: 即时较强, 社区弱 -->
+      <div class="map-dot" style="left:22%;top:24%;width:32px;height:32px;background:rgba(75,138,244,0.1);border:1px solid var(--accent);">
+        <div class="map-dot-label">快乐猴</div>
+      </div>
+      <!-- 山姆: 即时弱, 品质强 -->
+      <div class="map-dot" style="left:38%;top:72%;width:48px;height:48px;background:rgba(139,92,246,0.15);border:2px solid var(--purple);">
+        <div class="map-dot-label" style="color:var(--purple);">山姆</div>
+      </div>
+      <!-- 开市客: 即时更弱 -->
+      <div class="map-dot" style="left:28%;top:80%;width:40px;height:40px;background:rgba(139,92,246,0.1);border:1px solid var(--purple);">
+        <div class="map-dot-label" style="color:var(--purple);">开市客</div>
+      </div>
+      <!-- 永辉: 即时弱, 社区弱中 -->
+      <div class="map-dot" style="left:36%;top:64%;width:40px;height:40px;background:rgba(239,68,68,0.12);border:1px solid var(--red);">
+        <div class="map-dot-label" style="color:var(--red);">永辉</div>
+      </div>
+      <!-- 大润发/世纪联华 -->
+      <div class="map-dot" style="left:30%;top:70%;width:36px;height:36px;background:rgba(239,68,68,0.1);border:1px solid var(--red);">
+        <div class="map-dot-label" style="color:var(--red);">大润发</div>
+      </div>
+      <!-- 沃尔玛 -->
+      <div class="map-dot" style="left:24%;top:67%;width:36px;height:36px;background:rgba(239,68,68,0.1);border:1px solid var(--red);">
+        <div class="map-dot-label" style="color:var(--red);">沃尔玛</div>
+      </div>
+      <!-- 奥乐齐: 价格强, 便利中等, 社区弱 -->
+      <div class="map-dot" style="left:40%;top:52%;width:38px;height:38px;background:rgba(16,185,129,0.12);border:1px solid var(--green);">
+        <div class="map-dot-label" style="color:var(--green);">奥乐齐</div>
+      </div>
+      <!-- 超盒算NB -->
+      <div class="map-dot" style="left:46%;top:54%;width:34px;height:34px;background:rgba(16,185,129,0.1);border:1px solid var(--green);">
+        <div class="map-dot-label" style="color:var(--green);">超盒算NB</div>
+      </div>
+      <!-- 东方甄选: 即时弱, 社区弱 -->
+      <div class="map-dot" style="left:18%;top:56%;width:36px;height:36px;background:rgba(245,158,11,0.12);border:1px solid var(--orange);">
+        <div class="map-dot-label" style="color:var(--orange);">东方甄选</div>
+      </div>
+      <!-- 胖东来: 社区极强, 即时弱 -->
+      <div class="map-dot" style="left:82%;top:68%;width:52px;height:52px;background:rgba(249,115,22,0.15);border:2px solid #EA580C;">
+        <div class="map-dot-label" style="color:#EA580C;">胖东来</div>
+      </div>
+      <!-- 鲜风生活/成山农场 -->
+      <div class="map-dot" style="left:72%;top:72%;width:38px;height:38px;background:rgba(249,115,22,0.1);border:1px solid #EA580C;">
+        <div class="map-dot-label" style="color:#EA580C;">鲜风生活</div>
+      </div>
+      <div class="map-dot" style="left:78%;top:76%;width:36px;height:36px;background:rgba(249,115,22,0.1);border:1px solid #EA580C;">
+        <div class="map-dot-label" style="color:#EA580C;">成山农场</div>
+      </div>
+      <!-- 步步高/淘小胖 -->
+      <div class="map-dot" style="left:62%;top:62%;width:34px;height:34px;background:rgba(249,115,22,0.1);border:1px solid #EA580C;">
+        <div class="map-dot-label" style="color:#EA580C;">步步高</div>
+      </div>
+
+      <!-- 遥望目标区间（右上空白区域） -->
+      <div style="position:absolute;left:55%;top:12%;width:36%;height:40%;
+        border:2px dashed rgba(26,63,212,0.4);border-radius:20px;
+        background:rgba(26,63,212,0.04);">
+        <div style="position:absolute;top:12px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;font-weight:700;color:var(--primary);opacity:0.7;">竞争空白区域</div>
+      </div>
+
+      <!-- 遥望目标位 -->
+      <div class="map-star" style="left:72%;top:30%;">
+        <div style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);white-space:nowrap;text-align:center;">
+          <div style="font-size:12px;font-weight:800;color:var(--primary);">遥望社区超市</div>
+          <div style="font-size:10px;color:var(--muted);">目标定位</div>
+        </div>
+        <div class="map-star-inner">目标</div>
+      </div>
+    </div>
+
+    <p style="margin-top:16px;font-size:13px;color:var(--muted);text-align:center;">
+      右上角"社区深度强 + 即时便利强"的象限几乎是竞争空白——这正是遥望的目标定位区间
+    </p>
+  </div>
+</section>
+
+<!-- SECTION 5: 核心洞察 -->
+<section class="section section-dark">
+  <div class="section-inner">
+    <p class="section-eyebrow">○ Core Insight · 04</p>
+    <h2 class="section-title">三个结构性空白，一个战略机会</h2>
+    <p class="section-subtitle">竞品研究揭示的不是谁做得好，而是没有人同时做到的事情。</p>
+    <div class="title-bar"></div>
+
+    <div class="gap-grid">
+      <div class="gap-card">
+        <div class="gap-card-icon">🔲</div>
+        <div class="gap-card-title">空白一：社区深度 + 即时履约同时兼得</div>
+        <p class="gap-card-body">
+          做得好即时履约的（盒马、小象），没有真正的社区运营深度，顾客关系建立在App而非邻里之间。
+          做得好社区深度的（胖东来），又主动拒绝即时履约扩张。
+          <span class="gap-highlight">遥望的机会：用门店建立社区信任，用履约网络完成即时交付。</span>
+        </p>
+      </div>
+      <div class="gap-card">
+        <div class="gap-card-icon">🎯</div>
+        <div class="gap-card-title">空白二：差异化品质选品 + 生活服务融合</div>
+        <p class="gap-card-body">
+          大卖场的选品是大众化的，硬折扣的选品是标准化的，即时零售的选品是平台化的。
+          没有人在社区门店里做到"高品质自有品牌 + 社区生活服务 + 线上线下互动体验"的融合。
+          <span class="gap-highlight">遥望MCN基因 + 自孵化品牌，天然有资源填补这个空白。</span>
+        </p>
+      </div>
+      <div class="gap-card">
+        <div class="gap-card-icon">📡</div>
+        <div class="gap-card-title">空白三：私域用户资产在零售场景的沉淀</div>
+        <p class="gap-card-body">
+          所有现有玩家的用户数据都锁在平台上（淘宝、京东、美团）或留在POS机里。
+          没有人在社区门店场景里真正建立起属于自己的私域用户资产——
+          知道用户是谁、住在哪、每天买什么。
+          <span class="gap-highlight">这是遥望可以做到、且做了就形成不可切断的竞争壁垒的事。</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="insight-strip">
+      <h3>竞品研究的终极结论</h3>
+      <p>
+        过去10年，几乎所有有实力的玩家都曾试图在社区零售格局取胜：大卖场缩店、电商做前置仓、MCN开线下店。
+        他们失败不是因为这个方向错了，而是因为各自的基因和成本结构与社区超市的底层逻辑相悖。
+        这反而说明：<strong>这个格局需要一个基因特殊的玩家</strong>——
+        既有品牌孵化能力（不依赖价格竞争），又有数字化能力（突破规模化复制瓶颈），
+        又有真实的社区运营意愿（不为平台引流，为自己积累用户资产）。
+        这个描述，恰好符合遥望。
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <div class="footer-brand">遥望科技 · 社区超市战略报告 · 2026 · 内部文件</div>
+  <div class="footer-nav">
+    <a href="01_industry.html">← 01 行业分析</a>
+    <a href="03_opportunity.html">03 机会分析 →</a>
+  </div>
+</footer>
+
+<script>
+const radarDefaults = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 16, font: { size: 11 } } } },
+  scales: {
+    r: {
+      min: 0, max: 10, ticks: { stepSize: 2, font: { size: 9 }, backdropColor: 'transparent' },
+      pointLabels: { font: { size: 10, weight: '600' }, color: '#374151' },
+      grid: { color: 'rgba(0,0,0,0.06)' }, angleLines: { color: 'rgba(0,0,0,0.06)' }
+    }
+  }
+};
+const dims = ['价格力','品质选品','即时便利','社区深度','数字化','品牌黏性'];
+
+// 传统大卖场 (永辉/大润发/沃尔玛/世纪联华 均值)
+new Chart(document.getElementById('radar1').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'永辉', data:[6,6,4,4,5,6], borderColor:'#DC2626', backgroundColor:'rgba(220,38,38,0.06)', borderWidth:2, pointRadius:3 },
+      { label:'大润发', data:[7,5,3,3,4,5], borderColor:'#F59E0B', backgroundColor:'rgba(245,158,11,0.04)', borderWidth:2, pointRadius:3 },
+      { label:'沃尔玛', data:[6,6,3,3,5,5], borderColor:'#6B7280', backgroundColor:'rgba(107,114,128,0.04)', borderWidth:1.5, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 私域直播
+new Chart(document.getElementById('radar2').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'东方甄选', data:[5,8,2,2,7,7], borderColor:'#D97706', backgroundColor:'rgba(217,119,6,0.08)', borderWidth:2.5, pointRadius:3 },
+      { label:'远方安选', data:[5,7,2,2,6,6], borderColor:'#92400E', backgroundColor:'rgba(146,64,14,0.04)', borderWidth:1.5, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 即时零售
+new Chart(document.getElementById('radar3').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'盒马', data:[6,8,9,5,9,7], borderColor:'#4B8AF4', backgroundColor:'rgba(75,138,244,0.08)', borderWidth:2.5, pointRadius:3 },
+      { label:'小象超市', data:[7,6,8,4,8,6], borderColor:'#7C3AED', backgroundColor:'rgba(124,58,237,0.05)', borderWidth:2, pointRadius:3 },
+      { label:'快乐猴', data:[7,5,8,3,7,5], borderColor:'#06B6D4', backgroundColor:'rgba(6,182,212,0.04)', borderWidth:1.5, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 硬折扣
+new Chart(document.getElementById('radar4').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'奥乐齐', data:[9,7,4,4,5,8], borderColor:'#059669', backgroundColor:'rgba(5,150,105,0.08)', borderWidth:2.5, pointRadius:3 },
+      { label:'超盒算NB', data:[8,5,4,4,4,6], borderColor:'#10B981', backgroundColor:'rgba(16,185,129,0.04)', borderWidth:2, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 会员制
+new Chart(document.getElementById('radar5').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'山姆', data:[8,9,5,3,8,9], borderColor:'#8B5CF6', backgroundColor:'rgba(139,92,246,0.08)', borderWidth:2.5, pointRadius:3 },
+      { label:'开市客', data:[9,9,2,2,5,8], borderColor:'#A78BFA', backgroundColor:'rgba(167,139,250,0.04)', borderWidth:2, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 地方特色
+new Chart(document.getElementById('radar6').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'胖东来', data:[6,10,3,9,5,10], borderColor:'#EA580C', backgroundColor:'rgba(234,88,12,0.08)', borderWidth:2.5, pointRadius:3 },
+      { label:'成山农场', data:[7,8,4,7,5,8], borderColor:'#F97316', backgroundColor:'rgba(249,115,22,0.04)', borderWidth:2, pointRadius:3 },
+      { label:'鲜风生活', data:[6,7,3,7,4,7], borderColor:'#FB923C', backgroundColor:'rgba(251,146,60,0.03)', borderWidth:1.5, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 综合对比
+new Chart(document.getElementById('radarCompare').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'传统大卖场均值', data:[6.5,5.5,3,3.5,4.5,5], borderColor:'#DC2626', backgroundColor:'rgba(220,38,38,0.04)', borderWidth:2, pointRadius:3, borderDash:[] },
+      { label:'即时零售均值', data:[6.5,6.5,8.5,4,8,6], borderColor:'#4B8AF4', backgroundColor:'rgba(75,138,244,0.04)', borderWidth:2, pointRadius:3 },
+      { label:'地方特色连锁均值', data:[6.5,8,3.5,7.5,4.5,8], borderColor:'#EA580C', backgroundColor:'rgba(234,88,12,0.04)', borderWidth:2, pointRadius:3 },
+      { label:'遥望目标定位', data:[7,8,8,8,7,8], borderColor:'#0D1B5E', backgroundColor:'rgba(13,27,94,0.12)', borderWidth:3, pointRadius:5, borderDash:[6,3] },
+    ]
+  }, options: {
+    ...radarDefaults,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 16, font: { size: 11 } } } }
+  }
+});
+</script>
+</body>
+</html>
