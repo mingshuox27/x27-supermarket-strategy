@@ -141,6 +141,11 @@
     }
 
     /* ── 打印 ── */
+    /* 强制 table 布局不被手机浏览器重置 */
+    table.layout { display: table !important; }
+    table.layout tr { display: table-row !important; }
+    table.layout td { display: table-cell !important; }
+
     @media print {
       body { background:#fff; }
       .layout { width:100%; margin:0; box-shadow:none; }
