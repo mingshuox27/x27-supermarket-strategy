@@ -220,15 +220,16 @@ body { font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei
       <span class="pill-dot"></span>
       COMPETITIVE ANALYSIS · 竞品全景分析
     </div>
-    <h1>22个品牌，<em>6大赛道</em><br>为什么都没做<em>社区超市</em></h1>
+    <h1>22个品牌，<em>7大赛道</em><br>谁在抢社区超市这块<em>蛋糕</em></h1>
     <p class="hero-desc">
       我们系统拆解了中国超市零售市场全部主流玩家，
       用六维雷达模型衡量各自的能力边界，
-      并深度研究了他们为什么都没有、或没能在社区格局中成功。
+      并深度研究了他们为什么都没有、没能、或以不同方式切入社区零售格局。
     </p>
     <div class="hero-cats">
       <span class="cat-chip" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:#DC2626;">传统大卖场 4个</span>
-      <span class="cat-chip" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.3);color:#D97706;">私域直播电商 3个</span>
+      <span class="cat-chip" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.3);color:#D97706;">私域直播电商 1个</span>
+      <span class="cat-chip" style="background:rgba(8,145,178,0.12);border-color:rgba(8,145,178,0.3);color:#0891B2;">健康私域连锁 2个</span>
       <span class="cat-chip" style="background:rgba(75,138,244,0.12);border-color:rgba(75,138,244,0.3);color:var(--accent);">即时零售超市 4个</span>
       <span class="cat-chip" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:#059669;">硬折扣超市 2个</span>
       <span class="cat-chip" style="background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.3);color:var(--purple);">会员制超市 2个</span>
@@ -341,14 +342,27 @@ body { font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei
         <div class="radar-card-header">
           <div>
             <span class="radar-cat" style="color:#D97706;">私域直播电商</span>
-            <div style="font-size:13px;color:var(--muted);margin-top:4px;">线上强、线下弱、无实体基因</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">内容强、线下弱、无实体基因</div>
           </div>
         </div>
         <div style="position:relative;height:260px;width:100%;"><canvas id="radar2"></canvas></div>
         <div class="radar-brands">
           <span class="brand-chip" style="background:#FEF3C7;color:#D97706;">东方甄选</span>
-          <span class="brand-chip" style="background:#FEF3C7;color:#D97706;">远方安选</span>
-          <span class="brand-chip" style="background:#FEF3C7;color:#D97706;">远方好物</span>
+        </div>
+      </div>
+
+      <!-- 健康私域连锁 -->
+      <div class="radar-card">
+        <div class="radar-card-header">
+          <div>
+            <span class="radar-cat" style="color:#0891B2;">健康私域连锁</span>
+            <div style="font-size:13px;color:var(--muted);margin-top:4px;">私域强、供应链直采、线下快速扩张</div>
+          </div>
+        </div>
+        <div style="position:relative;height:260px;width:100%;"><canvas id="radar2b"></canvas></div>
+        <div class="radar-brands">
+          <span class="brand-chip" style="background:#CFFAFE;color:#0891B2;">远方好物</span>
+          <span class="brand-chip" style="background:#CFFAFE;color:#0891B2;">远方安选</span>
         </div>
       </div>
 
@@ -450,14 +464,29 @@ body { font-family:-apple-system,"PingFang SC","Helvetica Neue","Microsoft YaHei
       <div class="why-card" style="border-left-color:#D97706;">
         <div class="why-card-head">
           <span class="why-cat" style="background:#FEF3C7;color:#D97706;">私域直播电商</span>
-          <span class="why-brands">东方甄选 · 远方系</span>
+          <span class="why-brands">东方甄选</span>
           <span class="why-tried-pill" style="background:#F3F4F6;color:#6B7280;">极少 / 未涉足</span>
-          <span class="why-tried-sub">东方甄选曾尝试线下</span>
+          <span class="why-tried-sub">曾尝试线下快闪但已放弃</span>
         </div>
-        <div class="why-body">核心竞争力是内容和主播，而非零售运营；实体店会分散内容生产注意力；线上销售毛利高于实体零售毛利，没有动机开店；无线下供应链体系；开店会暴露履约能力短板，影响品牌形象</div>
+        <div class="why-body">核心竞争力是内容和主播，而非零售运营；实体店会分散内容生产注意力；线上销售毛利高于实体零售，没有动机开店；无线下供应链体系；开店会暴露履约能力短板，影响品牌形象</div>
         <div class="why-foot">
           <span class="why-foot-tag">根本原因</span>
           <span class="why-foot-reason" style="color:#D97706;">轻资产内容基因，抗拒重资产零售</span>
+        </div>
+      </div>
+
+      <!-- 健康私域连锁 -->
+      <div class="why-card" style="border-left-color:#0891B2;">
+        <div class="why-card-head">
+          <span class="why-cat" style="background:#CFFAFE;color:#0891B2;">健康私域连锁</span>
+          <span class="why-brands">远方好物 · 远方安选</span>
+          <span class="why-tried-pill" style="background:#D1FAE5;color:#059669;">已大规模入局</span>
+          <span class="why-tried-sub">2025年底已开6000+门店</span>
+        </div>
+        <div class="why-body">远方安选是远方好物（广州蜂群互联网科技）的线下子品牌，2025年8月首批500家同步开业，定位"社区健康生活超市"，主打轻资产加盟（宝妈/社区店主为主），走"一店四开"模式（线下零售+社区团购+店播+会员私域）。与遥望的核心差异：①门店体量小（50-100㎡ vs 遥望900-1200㎡），无法支撑生鲜4级加工和堂食；②无MCN资源，内容引爆能力弱；③品类以健康食品为主，非全品类社区超市；④加盟模式难以保证运营质量标准化</div>
+        <div class="why-foot">
+          <span class="why-foot-tag">与遥望差距</span>
+          <span class="why-foot-reason" style="color:#0891B2;">小店加盟 vs 全品类专业运营，定位不同赛道</span>
         </div>
       </div>
 
@@ -718,7 +747,16 @@ new Chart(document.getElementById('radar2').getContext('2d'), {
     labels: dims,
     datasets: [
       { label:'东方甄选', data:[5,8,2,2,7,7], borderColor:'#D97706', backgroundColor:'rgba(217,119,6,0.08)', borderWidth:2.5, pointRadius:3 },
-      { label:'远方安选', data:[5,7,2,2,6,6], borderColor:'#92400E', backgroundColor:'rgba(146,64,14,0.04)', borderWidth:1.5, pointRadius:3 },
+    ]
+  }, options: radarDefaults
+});
+
+// 健康私域连锁
+new Chart(document.getElementById('radar2b').getContext('2d'), {
+  type: 'radar', data: {
+    labels: dims,
+    datasets: [
+      { label:'远方安选', data:[7,8,3,7,6,5], borderColor:'#0891B2', backgroundColor:'rgba(8,145,178,0.08)', borderWidth:2.5, pointRadius:3 },
     ]
   }, options: radarDefaults
 });
